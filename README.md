@@ -1,5 +1,5 @@
 <h3 align="center">PDF tokens type labeler</h3>
-<p align="center">This tools process PDFs and returns the tokens type</p>
+<p align="center">This tools inputs PDFs and returns each token type inside the PDFs</p>
 
 ## Tokens Types List
 
@@ -11,12 +11,6 @@
 * FIGURE
 * TITLE
 * TEXT
-
----
-
-This service provides one endpoint to get paragraphs from PDFs. The paragraphs
-contain the page number, the position in the page, the size, and the text. Furthermore, there is 
-an option to get an asynchronous flow using message queues on redis.
 
 ## Quick Start
 Create venv:
