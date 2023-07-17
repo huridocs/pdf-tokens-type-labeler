@@ -12,3 +12,4 @@ service.log
 **/*.pytest_cache
 src/.pytest_cache
 /huggingface/
+/model/
