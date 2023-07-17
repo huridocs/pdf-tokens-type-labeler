@@ -1,5 +1,5 @@
 <h3 align="center">PDF tokens type labeler</h3>
-<p align="center">This tools inputs PDFs and returns each token type inside the PDFs</p>
+<p align="center">This tool returns each token type inside a PDF</p>
 
 ## Tokens Types List
 
