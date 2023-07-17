@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class TagType(Enum):
+class TokenType(Enum):
     FORMULA = 0
     FOOTNOTE = 1
     LIST = 2
@@ -13,13 +13,13 @@ class TagType(Enum):
     @staticmethod
     def from_text(text: str):
         try:
-            return TagType[text.upper()]
+            return TokenType[text.upper()]
         except KeyError:
-            return TagType.TEXT
+            return TokenType.TEXT
 
     @staticmethod
     def from_value(value: int):
         try:
-            return TagType(value).name.lower()
+            return TokenType(value).name.lower()
         except ValueError:
-            return TagType.TEXT.name.lower()
+            return TokenType.TEXT.name.lower()
