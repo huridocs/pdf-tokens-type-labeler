@@ -6,9 +6,10 @@ class TokenType(Enum):
     FOOTNOTE = 1
     LIST = 2
     TABLE = 3
-    FIGURE = 4
-    TITLE = 5
-    TEXT = 6
+    CODE = 4
+    FIGURE = 5
+    TITLE = 6
+    TEXT = 7
 
     @staticmethod
     def from_text(text: str):

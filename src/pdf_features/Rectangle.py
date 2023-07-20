@@ -11,6 +11,9 @@ class Rectangle:
         self.width = self.right - self.left
         self.height = self.bottom - self.top
 
+    def as_dict(self):
+        return self.__dict__
+
     @staticmethod
     def from_segment_dict(paragraph: dict[str, any]) -> "Rectangle":
         return Rectangle(
@@ -28,20 +31,6 @@ class Rectangle:
         bottom = max([rectangle.bottom for rectangle in rectangles])
 
         return Rectangle(left, top, right, bottom)
-
-    @staticmethod
-    def from_pdftags(tags) -> "Rectangle":
-        return Rectangle.merge_rectangles(
-            [
-                Rectangle(
-                    tag.bounding_box.left,
-                    tag.bounding_box.top,
-                    tag.bounding_box.right,
-                    tag.bounding_box.bottom,
-                )
-                for tag in tags
-            ]
-        )
 
     @staticmethod
     def is_inside_tag(big_rectangle: "Rectangle", small_rectangle: "Rectangle") -> bool:

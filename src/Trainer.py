@@ -1,14 +1,15 @@
-import numpy as np
 import lightgbm as lgb
+import numpy as np
 from tqdm import tqdm
 
 from ModelConfiguration import ModelConfiguration
-from TokenType import TokenType
 from TokenFeatures import TokenFeatures
+from TokenType import TokenType
+from download_models import pdf_tokens_type_model
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfSegment import PdfSegment
-from pdf_features.PdfTag import PdfTag
+from pdf_features.PdfToken import PdfToken
 from pdf_features.Rectangle import Rectangle
 
 
@@ -16,8 +17,6 @@ class Trainer:
     def __init__(self, pdf_features: list[PdfFeatures], model_configuration: ModelConfiguration):
         self.model_configuration = model_configuration
         self.pdf_features = pdf_features
-        self.tag_type_counts = {}
-        self.wrong_prediction_counts = {}
 
     def get_model_input(self):
         features_rows = []
@@ -25,24 +24,27 @@ class Trainer:
 
         contex_size = self.model_configuration.context_size
         for token_features, page in self.loop_pages():
-            page_tags = [
-                self.get_pad_tag(segment_number=i - 999999, page_number=page.page_number) for i in range(contex_size)
+            page_tokens = [
+                self.get_padding_token(segment_number=i - 999999, page_number=page.page_number) for i in range(contex_size)
             ]
-            page_tags += page.tags
-            page_tags += [
-                self.get_pad_tag(segment_number=999999 + i, page_number=page.page_number) for i in range(contex_size)
+            page_tokens += page.tokens
+            page_tokens += [
+                self.get_padding_token(segment_number=999999 + i, page_number=page.page_number) for i in range(contex_size)
             ]
 
-            tags_indexes = range(contex_size, len(page_tags) - contex_size)
-            page_features = [self.get_context_features(token_features, page_tags, i) for i in tags_indexes]
+            tokens_indexes = range(contex_size, len(page_tokens) - contex_size)
+            page_features = [self.get_context_features(token_features, page_tokens, i) for i in tokens_indexes]
             features_rows.extend(page_features)
 
-            y = np.append(y, [page_tags[i].token_type.value for i in tags_indexes])
+            y = np.append(y, [page_tokens[i].token_type.value for i in tokens_indexes])
 
         return self.features_rows_to_x(features_rows), y
 
     @staticmethod
     def features_rows_to_x(features_rows):
+        if not features_rows:
+            return np.zeros((0, 0))
+
         x = np.zeros(((len(features_rows)), len(features_rows[0])))
         for i, v in enumerate(features_rows):
             x[i] = v
@@ -51,6 +53,10 @@ class Trainer:
     def train(self, model_path: str):
         print(f"Getting model input")
         x_train, y_train = self.get_model_input()
+
+        if not x_train.any():
+            print("No data for training")
+            return
 
         lgb_train = lgb.Dataset(x_train, y_train)
         print(f"Training")
@@ -64,16 +70,16 @@ class Trainer:
             token_features = TokenFeatures(pdf_features)
 
             for page in pdf_features.pages:
-                if not page.tags:
+                if not page.tokens:
                     continue
 
                 yield token_features, page
 
     @staticmethod
-    def get_pad_tag(segment_number: int, page_number: int):
-        return PdfTag(
+    def get_padding_token(segment_number: int, page_number: int):
+        return PdfToken(
             page_number,
-            "pad_tag",
+            "pad_token",
             "",
             PdfFont("pad_font_id", False, False, 0.0),
             segment_number,
@@ -82,27 +88,33 @@ class Trainer:
             TokenType.TEXT,
         )
 
-    def get_context_features(self, token_features: TokenFeatures, page_tags: list[PdfTag], tag_index: int):
-        tag_features = []
-        first_tag_from_context = tag_index - self.model_configuration.context_size
+    def get_context_features(self, token_features: TokenFeatures, page_tokens: list[PdfToken], token_index: int):
+        token_row_features = []
+        first_token_from_context = token_index - self.model_configuration.context_size
         for i in range(self.model_configuration.context_size * 2):
-            first_tag = page_tags[first_tag_from_context + i]
-            second_tag = page_tags[first_tag_from_context + i + 1]
-            tag_features.extend(token_features.get_features(first_tag, second_tag, page_tags))
+            first_token = page_tokens[first_token_from_context + i]
+            second_token = page_tokens[first_token_from_context + i + 1]
+            token_row_features.extend(token_features.get_features(first_token, second_token, page_tokens))
 
-        return tag_features
+        return token_row_features
 
-    def predict(self, model_path):
+    def predict(self, model_path: str = None):
+        model_path = model_path if model_path else pdf_tokens_type_model
         x, _ = self.get_model_input()
+        results: list[PdfSegment] = list()
+
+        if not x.any():
+            return results
+
         lightgbm_model = lgb.Booster(model_file=model_path)
         predictions = lightgbm_model.predict(x)
-        results: list[PdfSegment] = list()
         predictions_assigned = 0
         for token_features, page in self.loop_pages():
-            for tag, prediction in zip(page.tags, predictions[predictions_assigned:predictions_assigned + len(page.tags)]):
-                tag.token_type = TokenType.from_value(prediction)
-                results.append(PdfSegment.from_pdf_tag(tag))
+            for token, prediction in zip(
+                page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
+            ):
+                results.append(PdfSegment.from_pdf_token(token, TokenType.from_value(int(np.argmax(prediction)))))
 
-            predictions_assigned += len(page.tags)
+            predictions_assigned += len(page.tokens)
 
         return results

@@ -7,7 +7,6 @@ from lxml.etree import ElementBase
 
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
-from pdf_features.PdfTag import PdfTag
 
 from lxml import etree
 
@@ -25,6 +24,10 @@ class PdfFeatures:
         self.file_name = file_name
         self.file_type = file_type
 
+    def loop_tokens(self):
+        for page, token in [(page, token) for page in self.pages for token in page.tokens]:
+            yield page, token
+
     @staticmethod
     def from_poppler_etree(file_path):
         file: str = open(file_path).read()
@@ -41,16 +44,8 @@ class PdfFeatures:
 
         return PdfFeatures(pages, fonts, file_name, file_type)
 
-    def get_tags(self) -> list[PdfTag]:
-        tags: list[PdfTag] = list()
-        for page in self.pages:
-            for tag in page.tags:
-                tags.append(tag)
-
-        return tags
-
     @staticmethod
-    def from_pdf(pdf_path):
+    def from_pdf_path(pdf_path):
         xml_path = join(tempfile.gettempdir(), "pdf_etree.xml")
         subprocess.run(["pdftohtml", "-i", "-xml", "-zoom", "1.0", pdf_path, xml_path])
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)

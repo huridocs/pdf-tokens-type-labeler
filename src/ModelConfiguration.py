@@ -1,5 +1,7 @@
 from dataclasses import dataclass, asdict
 
+from TokenType import TokenType
+
 
 @dataclass
 class ModelConfiguration:
@@ -18,7 +20,7 @@ class ModelConfiguration:
     metric: str = "multi_logloss"
     learning_rate: float = 0.1
     seed: int = 42
-    num_class: int = 7
+    num_class: int = len(TokenType)
     verbose: int = -1
 
     def dict(self):
