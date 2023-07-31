@@ -9,7 +9,7 @@ from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfSegment import PdfSegment
 from pdf_features.PdfToken import PdfToken
-from pdf_features.token_type.Rectangle import Rectangle
+from pdf_features.Rectangle import Rectangle
 from pdf_features.token_type.TokenType import TokenType
 
 
