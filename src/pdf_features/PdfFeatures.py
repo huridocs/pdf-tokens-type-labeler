@@ -1,14 +1,19 @@
+import json
 import os
 import subprocess
 import tempfile
 from os.path import join
+from pathlib import Path
 
 from lxml.etree import ElementBase
 
+from config import LABELS_FILE_NAME, XML_NAME, LABELED_DATA_PATH, LABELED_XML_PATH
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
 
 from lxml import etree
+
+from pdf_features.token_type.TokenTypeLabels import TokenTypeLabels
 
 
 class PdfFeatures:
@@ -27,6 +32,10 @@ class PdfFeatures:
     def loop_tokens(self):
         for page, token in [(page, token) for page in self.pages for token in page.tokens]:
             yield page, token
+
+    def set_token_types(self, token_type_labels: TokenTypeLabels):
+        for page, token in self.loop_tokens():
+            token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
 
     @staticmethod
     def from_poppler_etree(file_path):
@@ -50,4 +59,18 @@ class PdfFeatures:
         subprocess.run(["pdftohtml", "-i", "-xml", "-zoom", "1.0", pdf_path, xml_path])
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
         os.remove(xml_path)
+        return pdf_features
+
+    @staticmethod
+    def from_labeled_data(dataset: str, pdf_name: str):
+        label_path = join(LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        xml_path = join(LABELED_XML_PATH, pdf_name, XML_NAME)
+
+        pdf_features = PdfFeatures.from_poppler_etree(xml_path)
+
+        labels_text = Path(label_path).read_text()
+        labels_dict = json.loads(labels_text)
+        token_type_labels = TokenTypeLabels(**labels_dict)
+        pdf_features.set_token_types(token_type_labels)
+
         return pdf_features

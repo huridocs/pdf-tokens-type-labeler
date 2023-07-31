@@ -13,4 +13,3 @@ service.log
 src/.pytest_cache
 /huggingface/
 /model/
-/labeled_data/

@@ -2,9 +2,9 @@ from typing import Self
 
 from lxml.etree import ElementBase
 
-from TokenType import TokenType
 from pdf_features.PdfFont import PdfFont
-from pdf_features.Rectangle import Rectangle
+from pdf_features.token_type.Rectangle import Rectangle
+from pdf_features.token_type.TokenType import TokenType
 
 
 class PdfToken:
@@ -50,6 +50,6 @@ class PdfToken:
         reading_order_no = int(xml_tag.attrib["reading_order_no"]) if "reading_order_no" in xml_tag.attrib else -1
         segment_no = int(xml_tag.attrib["segment_no"]) if "segment_no" in xml_tag.attrib else -1
         bounding_box = Rectangle.from_poppler_tag_etree(xml_tag)
-        token_type = TokenType.from_text(xml_tag.attrib["tag_type"]) if "tag_type" in xml_tag.attrib else TokenType.TEXT
+        token_type = TokenType.TEXT
 
         return PdfToken(page_number, tag_id, content, pdf_font, reading_order_no, segment_no, bounding_box, token_type)

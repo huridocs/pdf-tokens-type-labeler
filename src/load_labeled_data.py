@@ -1,7 +1,8 @@
+import os
 from os import listdir
-from os.path import join
+from os.path import join, isdir
 
-from config import LABELED_DATA_BASE_PATH
+from config import LABELED_DATA_PATH
 from pdf_features.PdfFeatures import PdfFeatures
 
 
@@ -10,14 +11,18 @@ def load_labeled_data(filter_in: str = None):
         print(f"Loading only datasets with the key word: {filter_in}")
 
     pdf_features: list[PdfFeatures] = list()
-    for labeled_data_folder_name in listdir(LABELED_DATA_BASE_PATH):
-        if filter_in and filter_in not in labeled_data_folder_name:
+    for dataset_name in listdir(LABELED_DATA_PATH):
+        if filter_in and filter_in not in dataset_name:
             continue
 
-        labeled_data_path = join(LABELED_DATA_BASE_PATH, labeled_data_folder_name)
-        files_paths = [join(labeled_data_path, file_name) for file_name in listdir(labeled_data_path)]
+        dataset_path = join(LABELED_DATA_PATH, dataset_name)
 
-        print(f"loading {labeled_data_folder_name} from {labeled_data_path}")
-        pdf_features.extend([PdfFeatures.from_poppler_etree(file_path) for file_path in files_paths])
+        if not isdir(dataset_path):
+            continue
+
+        dataset_pdf_name = [(dataset_name, pdf_name) for pdf_name in listdir(dataset_path)]
+
+        print(f"loading {dataset_name} from {dataset_path}")
+        pdf_features.extend([PdfFeatures.from_labeled_data(dataset, pdf_name) for dataset, pdf_name in dataset_pdf_name])
 
     return pdf_features

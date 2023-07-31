@@ -6,10 +6,10 @@ from Trainer import Trainer
 from load_labeled_data import load_labeled_data
 
 
-def train():
+def train(filter_in: str = None):
     model_path = join(Path(__file__).parent.parent, "model", "pdf_tokens_type.model")
     Path(model_path).parent.mkdir(exist_ok=True)
-    pdf_features = load_labeled_data()
+    pdf_features = load_labeled_data(filter_in)
     model_configuration = ModelConfiguration()
     trainer = Trainer(pdf_features, model_configuration)
     trainer.train(model_path)

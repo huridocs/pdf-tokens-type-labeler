@@ -1,6 +1,6 @@
-from TokenType import TokenType
 from pdf_features.PdfToken import PdfToken
-from pdf_features.Rectangle import Rectangle
+from pdf_features.token_type.Rectangle import Rectangle
+from pdf_features.token_type.TokenType import TokenType
 
 
 class PdfSegment:
@@ -14,10 +14,10 @@ class PdfSegment:
     def from_pdf_token(pdf_token: PdfToken, token_type: TokenType):
         return PdfSegment(pdf_token.page_number, pdf_token.bounding_box, pdf_token.content, token_type)
 
-    def as_dict(self):
+    def to_dict(self):
         return {
             "page_number": self.page_number,
-            "bounding_box": self.bounding_box.as_dict(),
+            "bounding_box": self.bounding_box.to_dict(),
             "text_content": self.text_content,
-            "token_type": self.token_type,
+            "token_type": self.token_type.value,
         }

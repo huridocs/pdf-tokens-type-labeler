@@ -4,13 +4,13 @@ from tqdm import tqdm
 
 from ModelConfiguration import ModelConfiguration
 from TokenFeatures import TokenFeatures
-from TokenType import TokenType
 from download_models import pdf_tokens_type_model
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfSegment import PdfSegment
 from pdf_features.PdfToken import PdfToken
-from pdf_features.Rectangle import Rectangle
+from pdf_features.token_type.Rectangle import Rectangle
+from pdf_features.token_type.TokenType import TokenType
 
 
 class Trainer:
@@ -36,7 +36,7 @@ class Trainer:
             page_features = [self.get_context_features(token_features, page_tokens, i) for i in tokens_indexes]
             features_rows.extend(page_features)
 
-            y = np.append(y, [page_tokens[i].token_type.value for i in tokens_indexes])
+            y = np.append(y, [page_tokens[i].token_type.get_number() for i in tokens_indexes])
 
         return self.features_rows_to_x(features_rows), y
 
@@ -98,7 +98,7 @@ class Trainer:
 
         return token_row_features
 
-    def predict(self, model_path: str = None):
+    def predict(self, model_path: str = None) -> list[PdfSegment]:
         model_path = model_path if model_path else pdf_tokens_type_model
         x, _ = self.get_model_input()
         results: list[PdfSegment] = list()
@@ -113,7 +113,7 @@ class Trainer:
             for token, prediction in zip(
                 page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
             ):
-                results.append(PdfSegment.from_pdf_token(token, TokenType.from_value(int(np.argmax(prediction)))))
+                results.append(PdfSegment.from_pdf_token(token, TokenType.from_index(int(np.argmax(prediction)))))
 
             predictions_assigned += len(page.tokens)
 

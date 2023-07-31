@@ -5,7 +5,7 @@ import config
 pdf_tokens_type_model = hf_hub_download(
     repo_id="HURIDOCS/pdf-segmetation",
     filename="pdf_tokens_type.model",
-    revision="9c6dd557abf29e683854178d39c790e33de84c2f",
+    revision="2240fae2a09136e3eaf852959b054b85094cd831",
     cache_dir=config.HUGGINGFACE_PATH,
 )
 
