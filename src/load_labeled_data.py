@@ -9,6 +9,7 @@ from pdf_features.PdfFeatures import PdfFeatures
 def load_labeled_data(filter_in: str = None):
     if filter_in:
         print(f"Loading only datasets with the key word: {filter_in}")
+        print()
 
     pdf_features: list[PdfFeatures] = list()
     for dataset_name in listdir(LABELED_DATA_PATH):

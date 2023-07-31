@@ -1,18 +1,17 @@
-from os.path import join
 from pathlib import Path
 
 from ModelConfiguration import ModelConfiguration
 from Trainer import Trainer
+from config import TRAINED_MODEL_PATH
 from load_labeled_data import load_labeled_data
 
 
 def train(filter_in: str = None):
-    model_path = join(Path(__file__).parent.parent, "model", "pdf_tokens_type.model")
-    Path(model_path).parent.mkdir(exist_ok=True)
+    Path(TRAINED_MODEL_PATH).parent.mkdir(exist_ok=True)
     pdf_features = load_labeled_data(filter_in)
     model_configuration = ModelConfiguration()
     trainer = Trainer(pdf_features, model_configuration)
-    trainer.train(model_path)
+    trainer.train(TRAINED_MODEL_PATH)
 
 
 if __name__ == "__main__":

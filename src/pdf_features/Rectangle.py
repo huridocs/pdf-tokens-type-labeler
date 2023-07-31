@@ -55,8 +55,4 @@ class Rectangle:
         return self.width * self.height
 
     def to_dict(self):
-        return {"top": self.top,
-                "left": self.left,
-                "right": self.right,
-                "bottom": self.bottom
-                }
+        return {"top": self.top, "left": self.left, "right": self.right, "bottom": self.bottom}
