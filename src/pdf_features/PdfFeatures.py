@@ -5,15 +5,13 @@ import tempfile
 from os.path import join
 from pathlib import Path
 
+from lxml import etree
 from lxml.etree import ElementBase
 
-from config import LABELS_FILE_NAME, XML_NAME, LABELED_DATA_PATH, LABELED_XML_PATH
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
-
-from lxml import etree
-
 from pdf_features.token_type.TokenTypeLabels import TokenTypeLabels
+from pdf_tokens_type_trainer.config import LABELED_DATA_PATH, XML_NAME, LABELS_FILE_NAME, LABELED_XML_PATH
 
 
 class PdfFeatures:

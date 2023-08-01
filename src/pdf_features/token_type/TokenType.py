@@ -9,6 +9,7 @@ class TokenType(Enum):
     FIGURE = "FIGURE"
     TITLE = "TITLE"
     TEXT = "TEXT"
+    CODE = "CODE"
 
     @staticmethod
     def from_text(text: str):

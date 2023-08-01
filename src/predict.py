@@ -1,9 +1,8 @@
 import typer
 
-from ModelConfiguration import ModelConfiguration
-from Trainer import Trainer
-
 from pdf_features.PdfFeatures import PdfFeatures
+from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
+from pdf_tokens_type_trainer.Trainer import Trainer
 
 
 def predict(pdf_path: str, model_path: str = None):

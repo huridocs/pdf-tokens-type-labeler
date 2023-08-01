@@ -2,15 +2,15 @@ import lightgbm as lgb
 import numpy as np
 from tqdm import tqdm
 
-from ModelConfiguration import ModelConfiguration
-from TokenFeatures import TokenFeatures
-from download_models import pdf_tokens_type_model
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfSegment import PdfSegment
 from pdf_features.PdfToken import PdfToken
 from pdf_features.Rectangle import Rectangle
 from pdf_features.token_type.TokenType import TokenType
+from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
+from pdf_tokens_type_trainer.TokenFeatures import TokenFeatures
+from pdf_tokens_type_trainer.download_models import pdf_tokens_type_model
 
 
 class Trainer:

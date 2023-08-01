@@ -1,8 +1,8 @@
 from os import listdir
 from os.path import join, isdir
 
-from config import LABELED_DATA_PATH
 from pdf_features.PdfFeatures import PdfFeatures
+from pdf_tokens_type_trainer.config import LABELED_DATA_PATH
 
 
 def load_labeled_data(filter_in: str = None):

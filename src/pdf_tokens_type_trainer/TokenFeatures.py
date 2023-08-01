@@ -7,7 +7,7 @@ from numpy import unique
 
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfToken import PdfToken
-from download_models import letter_corpus_path
+from pdf_tokens_type_trainer.download_models import letter_corpus_path
 
 
 class TokenFeatures:
