@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='pdf-tokens-type-labeler',
-    version='0.1',
+    version='0.2',
     packages=setuptools.find_packages(),
     url='https://github.com/huridocs/pdf-tokens-type-labeler',
     author='HURIDOCS',
