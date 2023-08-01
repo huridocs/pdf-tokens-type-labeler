@@ -6,7 +6,6 @@ class TokenType(Enum):
     FOOTNOTE = "FOOTNOTE"
     LIST = "LIST"
     TABLE = "TABLE"
-    CODE = "CODE"
     FIGURE = "FIGURE"
     TITLE = "TITLE"
     TEXT = "TEXT"
@@ -21,9 +20,9 @@ class TokenType(Enum):
     @staticmethod
     def from_index(index: int):
         try:
-            return TokenType[TokenType._member_names_[index]]
-        except ValueError:
+            return list(TokenType)[index]
+        except IndexError:
             return TokenType.TEXT.name.lower()
 
-    def get_number(self) -> int:
-        return self._member_names_.index(self.name)
+    def get_index(self) -> int:
+        return list(TokenType).index(self)

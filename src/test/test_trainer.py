@@ -3,10 +3,10 @@ from os.path import join, exists
 from unittest import TestCase
 
 from ModelConfiguration import ModelConfiguration
-from TokenType import TokenType
 from Trainer import Trainer
 from config import ROOT_PATH
 from pdf_features.PdfFeatures import PdfFeatures
+from pdf_features.token_type.TokenType import TokenType
 
 
 class TestTrainer(TestCase):
@@ -37,7 +37,7 @@ class TestTrainer(TestCase):
         trainer = Trainer([pdf_features], ModelConfiguration())
         types = trainer.predict()
         self.assertEqual("Document Big Centered Title", types[0].text_content)
-        self.assertEqual(TokenType.TITLE, TokenType.from_text(types[0].token_type))
-        self.assertEqual(TokenType.TEXT, TokenType.from_text(types[1].token_type))
-        self.assertEqual(TokenType.TITLE, TokenType.from_text(types[10].token_type))
+        self.assertEqual(TokenType.TITLE, types[0].token_type)
+        self.assertEqual(TokenType.TEXT, types[1].token_type)
+        self.assertEqual(TokenType.TITLE, types[10].token_type)
         self.assertEqual("List Title", types[10].text_content)
