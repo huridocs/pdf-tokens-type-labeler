@@ -2,7 +2,7 @@ import json
 import os
 import subprocess
 import tempfile
-from os.path import join
+from os.path import join, exists
 from pathlib import Path
 
 from lxml import etree
@@ -52,11 +52,17 @@ class PdfFeatures:
         return PdfFeatures(pages, fonts, file_name, file_type)
 
     @staticmethod
-    def from_pdf_path(pdf_path):
-        xml_path = join(tempfile.gettempdir(), "pdf_etree.xml")
+    def from_pdf_path(pdf_path, xml_path: str = None):
+        remove_xml = False if xml_path else True
+        xml_path = xml_path if xml_path else join(tempfile.gettempdir(), "pdf_etree.xml")
+
         subprocess.run(["pdftohtml", "-i", "-xml", "-zoom", "1.0", pdf_path, xml_path])
+
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
-        os.remove(xml_path)
+
+        if remove_xml and exists(xml_path):
+            os.remove(xml_path)
+
         return pdf_features
 
     @staticmethod
