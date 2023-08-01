@@ -13,10 +13,10 @@ from pdf_tokens_type_trainer.TokenFeatures import TokenFeatures
 from pdf_tokens_type_trainer.download_models import pdf_tokens_type_model
 
 
-class Trainer:
-    def __init__(self, pdf_features: list[PdfFeatures], model_configuration: ModelConfiguration):
-        self.model_configuration = model_configuration
+class TokenTypeTrainer:
+    def __init__(self, pdf_features: list[PdfFeatures], model_configuration: ModelConfiguration = None):
         self.pdf_features = pdf_features
+        self.model_configuration = model_configuration if model_configuration else ModelConfiguration()
 
     def get_model_input(self):
         features_rows = []
@@ -111,9 +111,11 @@ class Trainer:
         predictions_assigned = 0
         for token_features, page in self.loop_pages():
             for token, prediction in zip(
-                page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
+                    page.tokens, predictions[predictions_assigned: predictions_assigned + len(page.tokens)]
             ):
-                results.append(PdfSegment.from_pdf_token(token, TokenType.from_index(int(np.argmax(prediction)))))
+                token_type = TokenType.from_index(int(np.argmax(prediction)))
+                results.append(PdfSegment.from_pdf_token(token, token_type))
+                token.token_type = token_type
 
             predictions_assigned += len(page.tokens)
 
