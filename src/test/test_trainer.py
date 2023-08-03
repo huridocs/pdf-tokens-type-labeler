@@ -6,7 +6,7 @@ from ModelConfiguration import ModelConfiguration
 from Trainer import Trainer
 from config import ROOT_PATH
 from pdf_features.PdfFeatures import PdfFeatures
-from pdf_features.token_type.TokenType import TokenType
+from token_type_labels.TokenType import TokenType
 
 
 class TestTrainer(TestCase):

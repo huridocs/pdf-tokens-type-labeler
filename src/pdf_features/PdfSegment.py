@@ -1,6 +1,6 @@
 from pdf_features.PdfToken import PdfToken
 from pdf_features.Rectangle import Rectangle
-from pdf_features.token_type.TokenType import TokenType
+from token_type_labels.TokenType import TokenType
 
 
 class PdfSegment:

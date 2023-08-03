@@ -4,7 +4,7 @@ from lxml.etree import ElementBase
 
 from pdf_features.PdfFont import PdfFont
 from pdf_features.Rectangle import Rectangle
-from pdf_features.token_type.TokenType import TokenType
+from token_type_labels.TokenType import TokenType
 
 
 class PdfToken:

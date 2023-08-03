@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from pdf_features.Rectangle import Rectangle
-from pdf_features.token_type.TokenType import TokenType
+from token_type_labels.TokenType import TokenType
 
 
 class TokenTypeLabel(BaseModel):

@@ -7,7 +7,7 @@ PROJECT_NAME = "pdf-tokens-type-labeler"
 
 setup(
     name=PROJECT_NAME,
-    packages=["pdf_tokens_type_trainer", "pdf_features"],
+    packages=["pdf_tokens_type_trainer", "pdf_features", "token_type_labels"],
     package_dir={"": "src"},
     version="0.12",
     url="https://github.com/huridocs/pdf-tokens-type-labeler",
