@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-from token_type_labels.Page import Page
+from pdf_token_type_labels.Page import Page
 from pdf_features.Rectangle import Rectangle
-from token_type_labels.TokenType import TokenType
+from pdf_token_type_labels.TokenType import TokenType
 
 
 class TokenTypeLabels(BaseModel):

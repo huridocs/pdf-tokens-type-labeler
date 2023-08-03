@@ -11,7 +11,7 @@ from lxml.etree import ElementBase
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
 from pdf_tokens_type_trainer.config import LABELED_DATA_PATH, XML_NAME, LABELS_FILE_NAME, LABELED_XML_PATH
-from token_type_labels.TokenTypeLabels import TokenTypeLabels
+from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
 
 
 class PdfFeatures:

@@ -56,3 +56,12 @@ class Rectangle:
 
     def to_dict(self):
         return {"top": self.top, "left": self.left, "right": self.right, "bottom": self.bottom}
+
+    @staticmethod
+    def merge_rectangles(rectangles: list["Rectangle"]) -> "Rectangle":
+        left = min([rectangle.left for rectangle in rectangles])
+        top = min([rectangle.top for rectangle in rectangles])
+        right = max([rectangle.right for rectangle in rectangles])
+        bottom = max([rectangle.bottom for rectangle in rectangles])
+
+        return Rectangle(left, top, right, bottom)

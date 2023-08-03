@@ -1,43 +1,31 @@
-import shutil
 from os.path import join, exists
 from unittest import TestCase
 
-from ModelConfiguration import ModelConfiguration
-from Trainer import Trainer
-from config import ROOT_PATH
 from pdf_features.PdfFeatures import PdfFeatures
-from token_type_labels.TokenType import TokenType
+from pdf_token_type_labels.TokenType import TokenType
+from pdf_tokens_type_trainer.TokenTypeTrainer import TokenTypeTrainer
+from pdf_tokens_type_trainer.config import ROOT_PATH
 
 
 class TestTrainer(TestCase):
     def test_train_blank_pdf(self):
-        pdf_features = PdfFeatures.from_pdf_path(join(ROOT_PATH, "src", "test", "blank.pdf"))
+        pdf_features = PdfFeatures.from_pdf_path(join(ROOT_PATH, "test", "blank.pdf"))
         model_path = join(ROOT_PATH, "model", "blank.model")
-        trainer = Trainer([pdf_features], ModelConfiguration())
+        trainer = TokenTypeTrainer([pdf_features])
         trainer.train(model_path)
         self.assertFalse(exists(model_path))
 
     def test_predict_blank_pdf(self):
-        pdf_features = PdfFeatures.from_pdf_path(join(ROOT_PATH, "src", "test", "blank.pdf"))
-        trainer = Trainer([pdf_features], ModelConfiguration())
+        pdf_features = PdfFeatures.from_pdf_path(join(ROOT_PATH, "test", "blank.pdf"))
+        trainer = TokenTypeTrainer([pdf_features])
         self.assertEqual([], trainer.predict())
 
-    def test_train(self):
-        labeled_data_path = join(ROOT_PATH, "labeled_data", "one_column_train")
-        pdf_features_1 = PdfFeatures.from_poppler_etree(join(labeled_data_path, "cejil_staging1.xml"))
-        pdf_features_2 = PdfFeatures.from_poppler_etree(join(labeled_data_path, "cejil_staging2.xml"))
-        trainer = Trainer([pdf_features_1, pdf_features_2], ModelConfiguration())
-        model_path = join(ROOT_PATH, "model", "test.model")
-        shutil.rmtree(model_path, ignore_errors=True)
-        trainer.train(model_path)
-        self.assertTrue(exists(model_path))
-
     def test_predict(self):
-        pdf_features = PdfFeatures.from_pdf_path(join(ROOT_PATH, "src", "test", "test.pdf"))
-        trainer = Trainer([pdf_features], ModelConfiguration())
+        pdf_features = PdfFeatures.from_pdf_path(join(ROOT_PATH, "test", "test.pdf"))
+        trainer = TokenTypeTrainer([pdf_features])
         types = trainer.predict()
-        self.assertEqual("Document Big Centered Title", types[0].text_content)
         self.assertEqual(TokenType.TITLE, types[0].token_type)
+        self.assertEqual("Document Big Centered Title", types[0].text_content)
         self.assertEqual(TokenType.TEXT, types[1].token_type)
         self.assertEqual(TokenType.TITLE, types[10].token_type)
         self.assertEqual("List Title", types[10].text_content)

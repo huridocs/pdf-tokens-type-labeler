@@ -7,7 +7,7 @@ from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfSegment import PdfSegment
 from pdf_features.PdfToken import PdfToken
 from pdf_features.Rectangle import Rectangle
-from token_type_labels.TokenType import TokenType
+from pdf_token_type_labels.TokenType import TokenType
 from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
 from pdf_tokens_type_trainer.TokenFeatures import TokenFeatures
 from pdf_tokens_type_trainer.download_models import pdf_tokens_type_model
