@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
 class Rectangle:
-    def __init__(self, left, top, right, bottom):
+    def __init__(self, left: int, top: int, right: int, bottom: int):
         self.left = left
         self.top = top
         self.right = right
@@ -65,3 +65,7 @@ class Rectangle:
         bottom = max([rectangle.bottom for rectangle in rectangles])
 
         return Rectangle(left, top, right, bottom)
+
+    @staticmethod
+    def from_width_height(left: int, top: int, width: int, height: int):
+        return Rectangle(left, top, left + width, top + height)
