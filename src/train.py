@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-from load_labeled_data import load_labeled_data
+from pdf_token_type_labels.load_labeled_data import load_labeled_data
 from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
 from pdf_tokens_type_trainer.TokenTypeTrainer import TokenTypeTrainer
 from pdf_tokens_type_trainer.config import TRAINED_MODEL_PATH

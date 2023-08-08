@@ -4,7 +4,7 @@ from time import time
 
 from sklearn.metrics import f1_score, accuracy_score
 
-from load_labeled_data import load_labeled_data
+from pdf_token_type_labels.load_labeled_data import load_labeled_data
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
 from pdf_tokens_type_trainer.TokenTypeTrainer import TokenTypeTrainer
