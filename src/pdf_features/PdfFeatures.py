@@ -10,6 +10,7 @@ from lxml.etree import ElementBase
 
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
+from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 from pdf_tokens_type_trainer.config import (
     TOKEN_TYPE_LABELED_DATA_PATH,
     XML_NAME,
@@ -38,24 +39,34 @@ class PdfFeatures:
             yield page, token
 
     def set_token_types(self, token_type_labels: TokenTypeLabels):
-        if not token_type_labels or not token_type_labels.pages:
+        if not token_type_labels.pages:
             return
 
         for page, token in self.loop_tokens():
             token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
 
     def set_paragraphs(self, paragraphs_extractions_labels: TokenTypeLabels):
-        # if not paragraphs_extractions_labels or not paragraphs_extractions_labels.token_type_pages:
-        #     return
-        #
-        # segment_number = 1
-        #
-        #
-        #
-        # for page, token in self.loop_tokens():
-        #      pass
-        pass
+        if not paragraphs_extractions_labels.pages:
+            return
 
+        labels_per_page = self.get_labels_per_page(paragraphs_extractions_labels)
+        unassigned_token_index = 1000000
+        for page, token in self.loop_tokens():
+            for index, label in enumerate(labels_per_page[page.page_number]):
+                if token.inside_label(label):
+                    token.segment_no = index + 1
+                    break
+
+            token.segment_no = token.segment_no if token.segment_no else unassigned_token_index
+            unassigned_token_index += 1
+
+    def get_labels_per_page(self, paragraphs_extractions_labels):
+        page_numbers = [page.page_number for page in self.pages]
+        labels_per_page: dict[int, list[TokenTypeLabel]] = {page_number: list() for page_number in page_numbers}
+        for page_labels in paragraphs_extractions_labels.pages:
+            if page_labels.number in page_numbers:
+                labels_per_page[page_labels.number].extend(page_labels.labels)
+        return labels_per_page
 
     @staticmethod
     def from_poppler_etree(file_path):
@@ -96,7 +107,7 @@ class PdfFeatures:
         token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)
         pdf_features.set_token_types(token_type_labels)
 
-        paragraph_extraction_labels_path = join(TOKEN_TYPE_LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        paragraph_extraction_labels_path = join(PARAGRAPH_EXTRACTION_LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
         paragraphs_extractions_labels = PdfFeatures.load_token_type_labels(paragraph_extraction_labels_path)
         pdf_features.set_paragraphs(paragraphs_extractions_labels)
 

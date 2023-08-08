@@ -5,19 +5,20 @@ from lxml.etree import ElementBase
 from pdf_features.PdfFont import PdfFont
 from pdf_features.Rectangle import Rectangle
 from pdf_token_type_labels.TokenType import TokenType
+from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 
 
 class PdfToken:
     def __init__(
-        self,
-        page_number,
-        tag_id: str,
-        content: str,
-        pdf_font: PdfFont,
-        reading_order_no: int,
-        segment_no: int,
-        bounding_box: Rectangle,
-        token_type: TokenType,
+            self,
+            page_number,
+            tag_id: str,
+            content: str,
+            pdf_font: PdfFont,
+            reading_order_no: int,
+            segment_no: int,
+            bounding_box: Rectangle,
+            token_type: TokenType,
     ):
         self.page_number = int(page_number)
         self.id: str = tag_id
@@ -53,3 +54,11 @@ class PdfToken:
         token_type = TokenType.TEXT
 
         return PdfToken(page_number, tag_id, content, pdf_font, reading_order_no, segment_no, bounding_box, token_type)
+
+    def inside_label(self, label: TokenTypeLabel):
+        label_bounding_box = Rectangle.from_width_height(left=label.left,
+                                                         top=label.top,
+                                                         width=label.width,
+                                                         height=label.height)
+
+        return self.bounding_box.get_intersection_percentage(label_bounding_box) > 50
