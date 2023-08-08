@@ -10,7 +10,13 @@ from lxml.etree import ElementBase
 
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
-from pdf_tokens_type_trainer.config import LABELED_DATA_PATH, XML_NAME, LABELS_FILE_NAME, LABELED_XML_PATH
+from pdf_tokens_type_trainer.config import (
+    TOKEN_TYPE_LABELED_DATA_PATH,
+    XML_NAME,
+    LABELS_FILE_NAME,
+    XML_PATHS,
+    PARAGRAPH_EXTRACTION_LABELED_DATA_PATH,
+)
 from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
 
 
@@ -32,8 +38,24 @@ class PdfFeatures:
             yield page, token
 
     def set_token_types(self, token_type_labels: TokenTypeLabels):
+        if not token_type_labels or not token_type_labels.pages:
+            return
+
         for page, token in self.loop_tokens():
             token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
+
+    def set_paragraphs(self, paragraphs_extractions_labels: TokenTypeLabels):
+        # if not paragraphs_extractions_labels or not paragraphs_extractions_labels.token_type_pages:
+        #     return
+        #
+        # segment_number = 1
+        #
+        #
+        #
+        # for page, token in self.loop_tokens():
+        #      pass
+        pass
+
 
     @staticmethod
     def from_poppler_etree(file_path):
@@ -67,14 +89,25 @@ class PdfFeatures:
 
     @staticmethod
     def from_labeled_data(dataset: str, pdf_name: str):
-        label_path = join(LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
-        xml_path = join(LABELED_XML_PATH, pdf_name, XML_NAME)
-
+        xml_path = join(XML_PATHS, pdf_name, XML_NAME)
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
 
-        labels_text = Path(label_path).read_text()
-        labels_dict = json.loads(labels_text)
-        token_type_labels = TokenTypeLabels(**labels_dict)
+        token_type_labels_path = join(TOKEN_TYPE_LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)
         pdf_features.set_token_types(token_type_labels)
 
+        paragraph_extraction_labels_path = join(TOKEN_TYPE_LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        paragraphs_extractions_labels = PdfFeatures.load_token_type_labels(paragraph_extraction_labels_path)
+        pdf_features.set_paragraphs(paragraphs_extractions_labels)
+
         return pdf_features
+
+    @staticmethod
+    def load_token_type_labels(path: str) -> TokenTypeLabels:
+        if not exists(path):
+            print(f"No labeled data for {path}")
+            return TokenTypeLabels(pages=[])
+
+        labels_text = Path(path).read_text()
+        labels_dict = json.loads(labels_text)
+        return TokenTypeLabels(**labels_dict)

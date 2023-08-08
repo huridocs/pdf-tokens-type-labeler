@@ -11,8 +11,8 @@ from pdf_tokens_type_trainer.download_models import letter_corpus_path
 
 
 class TokenFeatures:
-    def __init__(self, pdf_features: PdfFeatures):
-        self.pdf_features = pdf_features
+    def __init__(self, pdfs_features: PdfFeatures):
+        self.pdfs_features = pdfs_features
         self.tuples_to_check: list[tuple[PdfToken, PdfToken]] = list()
 
         self.letter_corpus: dict[str, int] = self.get_letter_corpus()
@@ -35,7 +35,7 @@ class TokenFeatures:
     def get_modes(self):
         line_spaces, right_spaces = [0], [0]
 
-        for page, token in self.pdf_features.loop_tokens():
+        for page, token in self.pdfs_features.loop_tokens():
             top, bottom = token.bounding_box.top, token.bounding_box.bottom
             left, right = token.bounding_box.left, token.bounding_box.right
 
@@ -52,18 +52,18 @@ class TokenFeatures:
                 right_spaces.append(int(right))
 
         self.lines_space_mode = mode(line_spaces)
-        self.right_space_mode = int(self.pdf_features.pages[0].page_width - mode(right_spaces))
+        self.right_space_mode = int(self.pdfs_features.pages[0].page_width - mode(right_spaces))
 
     def get_mode_font(self):
         fonts_counter: Counter = Counter()
-        for page, token in self.pdf_features.loop_tokens():
+        for page, token in self.pdfs_features.loop_tokens():
             fonts_counter.update([token.font.font_id])
 
         if len(fonts_counter.most_common()) == 0:
             return
 
         font_mode_id = fonts_counter.most_common()[0][0]
-        font_mode_token = list(filter(lambda x: x.font_id == font_mode_id, self.pdf_features.fonts))
+        font_mode_token = list(filter(lambda x: x.font_id == font_mode_id, self.pdfs_features.fonts))
         if font_mode_token:
             self.font_size_mode: float = float(font_mode_token[0].font_size)
 
@@ -151,7 +151,7 @@ class TokenFeatures:
         return top_distance_gaps
 
     def get_left_right_block(self):
-        for page, token in self.pdf_features.loop_tokens():
+        for page, token in self.pdfs_features.loop_tokens():
             left, right = token.bounding_box.left, token.bounding_box.right
 
             token.left_of_token_on_the_right = left

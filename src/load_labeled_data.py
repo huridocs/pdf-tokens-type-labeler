@@ -2,7 +2,7 @@ from os import listdir
 from os.path import join, isdir
 
 from pdf_features.PdfFeatures import PdfFeatures
-from pdf_tokens_type_trainer.config import LABELED_DATA_PATH
+from pdf_tokens_type_trainer.config import TOKEN_TYPE_LABELED_DATA_PATH
 
 
 def load_labeled_data(filter_in: str = None):
@@ -11,11 +11,11 @@ def load_labeled_data(filter_in: str = None):
         print()
 
     pdf_features: list[PdfFeatures] = list()
-    for dataset_name in listdir(LABELED_DATA_PATH):
+    for dataset_name in listdir(TOKEN_TYPE_LABELED_DATA_PATH):
         if filter_in and filter_in not in dataset_name:
             continue
 
-        dataset_path = join(LABELED_DATA_PATH, dataset_name)
+        dataset_path = join(TOKEN_TYPE_LABELED_DATA_PATH, dataset_name)
 
         if not isdir(dataset_path):
             continue

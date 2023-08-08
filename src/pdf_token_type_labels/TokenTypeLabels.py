@@ -1,12 +1,12 @@
 from pydantic import BaseModel
 
-from pdf_token_type_labels.Page import Page
 from pdf_features.Rectangle import Rectangle
 from pdf_token_type_labels.TokenType import TokenType
+from pdf_token_type_labels.TokenTypePage import TokenTypePage
 
 
 class TokenTypeLabels(BaseModel):
-    pages: list[Page] = list()
+    pages: list[TokenTypePage] = list()
 
     def get_token_type(self, page_number: int, token_bounding_box: Rectangle):
         for page in self.pages:

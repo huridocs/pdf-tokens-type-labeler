@@ -5,7 +5,7 @@ from pdf_token_type_labels.TokenType import TokenType
 from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 
 
-class Page(BaseModel):
+class TokenTypePage(BaseModel):
     number: int
     labels: list[TokenTypeLabel]
 

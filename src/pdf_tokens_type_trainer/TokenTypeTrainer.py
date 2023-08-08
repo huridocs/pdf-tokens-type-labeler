@@ -111,7 +111,7 @@ class TokenTypeTrainer:
         predictions_assigned = 0
         for token_features, page in self.loop_pages():
             for token, prediction in zip(
-                    page.tokens, predictions[predictions_assigned: predictions_assigned + len(page.tokens)]
+                page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
             ):
                 token_type = TokenType.from_index(int(np.argmax(prediction)))
                 results.append(PdfSegment.from_pdf_token(token, token_type))

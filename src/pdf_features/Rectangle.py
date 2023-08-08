@@ -40,7 +40,7 @@ class Rectangle:
         if self.bottom < self.top:
             self.top, self.bottom = self.bottom, self.top
 
-    def get_intersection_percentage(self, rectangle: "Rectangle"):
+    def get_intersection_percentage(self, rectangle: "Rectangle") -> float:
         x1 = max(self.left, rectangle.left)
         y1 = max(self.top, rectangle.top)
         x2 = min(self.right, rectangle.right)
