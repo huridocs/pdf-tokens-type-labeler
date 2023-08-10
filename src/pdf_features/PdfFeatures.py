@@ -12,13 +12,15 @@ from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfPage import PdfPage
 from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 from pdf_tokens_type_trainer.config import (
-    TOKEN_TYPE_LABELED_DATA_PATH,
     XML_NAME,
     LABELS_FILE_NAME,
-    XML_PATHS,
-    PARAGRAPH_EXTRACTION_LABELED_DATA_PATH,
 )
 from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
+from pdf_tokens_type_trainer.get_paths import (
+    get_xml_path,
+    get_token_type_labeled_data_path,
+    get_paragraph_extraction_labeled_data_path,
+)
 
 
 class PdfFeatures:
@@ -99,15 +101,19 @@ class PdfFeatures:
         return pdf_features
 
     @staticmethod
-    def from_labeled_data(dataset: str, pdf_name: str):
-        xml_path = join(XML_PATHS, pdf_name, XML_NAME)
+    def from_labeled_data(pdf_labeled_data_project_path: str, dataset: str, pdf_name: str):
+        xml_path = join(get_xml_path(pdf_labeled_data_project_path), pdf_name, XML_NAME)
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
 
-        token_type_labels_path = join(TOKEN_TYPE_LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        token_type_labeled_project_path = get_token_type_labeled_data_path(pdf_labeled_data_project_path)
+        token_type_labels_path = join(token_type_labeled_project_path, dataset, pdf_name, LABELS_FILE_NAME)
         token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)
         pdf_features.set_token_types(token_type_labels)
 
-        paragraph_extraction_labels_path = join(PARAGRAPH_EXTRACTION_LABELED_DATA_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        paragraph_extraction_labeled_project_path = get_paragraph_extraction_labeled_data_path(pdf_labeled_data_project_path)
+        paragraph_extraction_labels_path = join(
+            paragraph_extraction_labeled_project_path, dataset, pdf_name, LABELS_FILE_NAME
+        )
         paragraphs_extractions_labels = PdfFeatures.load_token_type_labels(paragraph_extraction_labels_path)
         pdf_features.set_paragraphs(paragraphs_extractions_labels)
 
