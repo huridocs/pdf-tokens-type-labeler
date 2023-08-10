@@ -14,8 +14,8 @@ from pdf_tokens_type_trainer.download_models import pdf_tokens_type_model
 
 
 class TokenTypeTrainer:
-    def __init__(self, pdf_features: list[PdfFeatures], model_configuration: ModelConfiguration = None):
-        self.pdf_features = pdf_features
+    def __init__(self, pdfs_features: list[PdfFeatures], model_configuration: ModelConfiguration = None):
+        self.pdfs_features = pdfs_features
         self.model_configuration = model_configuration if model_configuration else ModelConfiguration()
 
     def get_model_input(self):
@@ -66,7 +66,7 @@ class TokenTypeTrainer:
         gbm.save_model(model_path, num_iteration=gbm.best_iteration)
 
     def loop_pages(self):
-        for pdf_features in tqdm(self.pdf_features):
+        for pdf_features in tqdm(self.pdfs_features):
             token_features = TokenFeatures(pdf_features)
 
             for page in pdf_features.pages:
