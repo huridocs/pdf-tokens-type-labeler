@@ -23,7 +23,7 @@ def train_for_benchmark():
 
 
 def get_predictions_for_benchmark(test_pdf_features: list[PdfFeatures]):
-    trainer = Trainer(test_pdf_features, ModelConfiguration())
+    trainer = TokenTypeTrainer(test_pdf_features, ModelConfiguration())
     print("predicting")
     return trainer.predict(BENCHMARK_MODEL)
 
@@ -34,11 +34,17 @@ def loop_tokens(test_pdf_features: list[PdfFeatures]):
             yield token
 
 
+def predict_for_benchmark():
+    test_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
+    truths = [token.token_type.get_index() for token in loop_tokens(test_pdf_features)]
+    predictions = [token.token_type.get_index() for token in get_predictions_for_benchmark(test_pdf_features)]
+    return truths, predictions
+
+
 def benchmark():
     train_for_benchmark()
-    test_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
-    predictions = [token.token_type.get_index() for token in get_predictions_for_benchmark(test_pdf_features)]
-    truths = [token.token_type.get_index() for token in loop_tokens(test_pdf_features)]
+    truths, predictions = predict_for_benchmark()
+
     f1 = round(f1_score(truths, predictions, average="macro") * 100, 2)
     accuracy = round(accuracy_score(truths, predictions) * 100, 2)
     print(f"F1 score {f1}%")
