@@ -18,6 +18,7 @@ class PdfPage:
             PdfToken.from_poppler_etree(page_number, xml_tag, fonts_by_font_id[xml_tag.attrib["font"]])
             for xml_tag in xml_page.findall(".//text")
         ]
+        tokens = [token for token in tokens if token.strip()]
         width = int(xml_page.attrib["width"])
         height = int(xml_page.attrib["height"])
         return PdfPage(page_number, width, height, tokens)
