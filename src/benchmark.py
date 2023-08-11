@@ -15,30 +15,22 @@ BENCHMARK_MODEL = join(Path(__file__).parent.parent, "model", "benchmark.model")
 
 def train_for_benchmark():
     Path(BENCHMARK_MODEL).parent.mkdir(exist_ok=True)
-    train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
+    # train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
+    train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="multicolumn_test")
     model_configuration = ModelConfiguration()
     trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
     print("training")
     trainer.train(BENCHMARK_MODEL)
 
 
-def get_predictions_for_benchmark(test_pdf_features: list[PdfFeatures]):
-    trainer = TokenTypeTrainer(test_pdf_features, ModelConfiguration())
-    print("predicting")
-    return trainer.predict(BENCHMARK_MODEL)
-
-
-def loop_tokens(test_pdf_features: list[PdfFeatures]):
-    for pdf_features in test_pdf_features:
-        for page, token in pdf_features.loop_tokens():
-            yield token
-
-
 def predict_for_benchmark():
     test_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
-    truths = [token.token_type.get_index() for token in loop_tokens(test_pdf_features)]
-    predictions_pdfs_features = get_predictions_for_benchmark(test_pdf_features)
-    predictions = [token.prediction for token in loop_tokens(predictions_pdfs_features)]
+    trainer = TokenTypeTrainer(test_pdf_features, ModelConfiguration())
+    truths = [token.token_type.get_index() for token in trainer.loop_tokens()]
+
+    print("predicting")
+    trainer.predict(BENCHMARK_MODEL)
+    predictions = [token.prediction for token in trainer.loop_tokens()]
     return truths, predictions
 
 

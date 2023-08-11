@@ -123,3 +123,8 @@ class TokenTypeTrainer:
             predictions_assigned += len(page.tokens)
 
         return self.pdfs_features
+
+    def set_token_types(self):
+        self.predict()
+        for token in self.loop_tokens():
+            token.token_type = TokenType.from_index(token.prediction)
