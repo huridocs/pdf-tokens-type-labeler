@@ -73,7 +73,11 @@ class PdfFeatures:
 
     @staticmethod
     def from_poppler_etree(file_path):
-        file: str = open(file_path).read()
+        try:
+            file: str = open(file_path).read()
+        except FileNotFoundError:
+            return None
+
         file_bytes: bytes = file.encode("utf-8")
         root: ElementBase = etree.fromstring(file_bytes)
 
