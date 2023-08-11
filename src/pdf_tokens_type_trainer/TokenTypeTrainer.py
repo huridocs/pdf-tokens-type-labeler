@@ -6,7 +6,6 @@ from tqdm import tqdm
 
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfFont import PdfFont
-from pdf_features.PdfSegment import PdfSegment
 from pdf_features.PdfToken import PdfToken
 from pdf_features.Rectangle import Rectangle
 from pdf_token_type_labels.TokenType import TokenType
@@ -105,7 +104,7 @@ class TokenTypeTrainer:
 
         return token_row_features
 
-    def predict(self, model_path: str = None) -> list[PdfFeatures]:
+    def predict(self, model_path: str | Path = None) -> list[PdfFeatures]:
         model_path = model_path if model_path else pdf_tokens_type_model
         x, _ = self.get_model_input()
 
