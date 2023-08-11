@@ -104,7 +104,7 @@ class TokenTypeTrainer:
 
         return token_row_features
 
-    def predict(self, model_path: str | Path = None) -> list[PdfFeatures]:
+    def predict(self, model_path: str | Path = None):
         model_path = model_path if model_path else pdf_tokens_type_model
         x, _ = self.get_model_input()
 
@@ -121,8 +121,6 @@ class TokenTypeTrainer:
                 token.prediction = int(np.argmax(prediction))
 
             predictions_assigned += len(page.tokens)
-
-        return self.pdfs_features
 
     def set_token_types(self):
         self.predict()

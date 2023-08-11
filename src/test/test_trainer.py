@@ -18,14 +18,16 @@ class TestTrainer(TestCase):
     def test_predict_blank_pdf(self):
         pdf_features = PdfFeatures.from_pdf_path(join(PDF_TOKENS_TYPE_ROOT_PATH, "src", "test", "blank.pdf"))
         trainer = TokenTypeTrainer([pdf_features])
-        self.assertEqual([], trainer.predict())
+        trainer.set_token_types()
+        self.assertEqual([], pdf_features.pages[0].tokens)
 
     def test_predict(self):
         pdf_features = PdfFeatures.from_pdf_path(join(PDF_TOKENS_TYPE_ROOT_PATH, "src", "test", "test.pdf"))
         trainer = TokenTypeTrainer([pdf_features])
-        types = trainer.predict()
-        self.assertEqual(TokenType.TITLE, types[0].token_type)
-        self.assertEqual("Document Big Centered Title", types[0].text_content)
-        self.assertEqual(TokenType.TEXT, types[1].token_type)
-        self.assertEqual(TokenType.TITLE, types[10].token_type)
-        self.assertEqual("List Title", types[10].text_content)
+        trainer.set_token_types()
+        tokens = pdf_features.pages[0].tokens
+        self.assertEqual(TokenType.TITLE, tokens[0].token_type)
+        self.assertEqual("Document Big Centered Title", tokens[0].content)
+        self.assertEqual(TokenType.TEXT, tokens[1].token_type)
+        self.assertEqual(TokenType.TITLE, tokens[10].token_type)
+        self.assertEqual("List Title", tokens[10].content)
