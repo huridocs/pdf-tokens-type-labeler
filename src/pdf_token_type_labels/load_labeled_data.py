@@ -19,7 +19,7 @@ def loop_datasets(pdf_labeled_data_project_path: str, filter_in: str):
         yield dataset_name, dataset_path
 
 
-def load_labeled_data(pdf_labeled_data_project_path: str, filter_in: str = None):
+def load_labeled_data(pdf_labeled_data_project_path: str, filter_in: str = None) -> list[PdfFeatures]:
     if filter_in:
         print(f"Loading only datasets with the key word: {filter_in}")
         print()

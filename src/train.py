@@ -10,9 +10,9 @@ from pdf_tokens_type_trainer.config import TRAINED_MODEL_PATH, PDF_TOKENS_TYPE_R
 
 def train(filter_in: str = None):
     Path(join(PDF_TOKENS_TYPE_ROOT_PATH, TRAINED_MODEL_PATH)).parent.mkdir(exist_ok=True)
-    pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in)
+    pdfs_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in)
     model_configuration = ModelConfiguration()
-    trainer = TokenTypeTrainer(pdf_features, model_configuration)
+    trainer = TokenTypeTrainer(pdfs_features, model_configuration)
     trainer.train(TRAINED_MODEL_PATH)
 
 

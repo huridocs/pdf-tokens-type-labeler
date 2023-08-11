@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import lightgbm as lgb
 import numpy as np
 from tqdm import tqdm
@@ -50,7 +52,7 @@ class TokenTypeTrainer:
             x[i] = v
         return x
 
-    def train(self, model_path: str):
+    def train(self, model_path: str | Path):
         print(f"Getting model input")
         x_train, y_train = self.get_model_input()
 
@@ -75,6 +77,11 @@ class TokenTypeTrainer:
 
                 yield token_features, page
 
+    def loop_tokens(self):
+        for pdf_features in self.pdfs_features:
+            for page, token in pdf_features.loop_tokens():
+                yield token
+
     @staticmethod
     def get_padding_token(segment_number: int, page_number: int):
         return PdfToken(
@@ -98,25 +105,22 @@ class TokenTypeTrainer:
 
         return token_row_features
 
-    def predict(self, model_path: str = None) -> list[PdfSegment]:
+    def predict(self, model_path: str = None) -> list[PdfFeatures]:
         model_path = model_path if model_path else pdf_tokens_type_model
         x, _ = self.get_model_input()
-        results: list[PdfSegment] = list()
 
         if not x.any():
-            return results
+            return self.pdfs_features
 
         lightgbm_model = lgb.Booster(model_file=model_path)
         predictions = lightgbm_model.predict(x)
         predictions_assigned = 0
         for token_features, page in self.loop_pages():
             for token, prediction in zip(
-                page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
+                page.tokens, predictions[predictions_assigned: predictions_assigned + len(page.tokens)]
             ):
-                token_type = TokenType.from_index(int(np.argmax(prediction)))
-                results.append(PdfSegment.from_pdf_token(token, token_type))
-                token.token_type = token_type
+                token.prediction = int(np.argmax(prediction))
 
             predictions_assigned += len(page.tokens)
 
-        return results
+        return self.pdfs_features

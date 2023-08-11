@@ -30,6 +30,7 @@ class PdfToken:
         self.token_type: TokenType = token_type
         self.right_of_token_on_the_left = 0
         self.left_of_token_on_the_right = 0
+        self.prediction = 0
 
     def same_line(self, tag: Self):
         if self.bounding_box.bottom < tag.bounding_box.top:

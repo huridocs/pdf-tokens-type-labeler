@@ -37,7 +37,8 @@ def loop_tokens(test_pdf_features: list[PdfFeatures]):
 def predict_for_benchmark():
     test_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
     truths = [token.token_type.get_index() for token in loop_tokens(test_pdf_features)]
-    predictions = [token.token_type.get_index() for token in get_predictions_for_benchmark(test_pdf_features)]
+    predictions_pdfs_features = get_predictions_for_benchmark(test_pdf_features)
+    predictions = [token.prediction for token in loop_tokens(predictions_pdfs_features)]
     return truths, predictions
 
 

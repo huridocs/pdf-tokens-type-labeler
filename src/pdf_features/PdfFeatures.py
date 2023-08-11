@@ -37,8 +37,9 @@ class PdfFeatures:
         self.file_type = file_type
 
     def loop_tokens(self):
-        for page, token in [(page, token) for page in self.pages for token in page.tokens]:
-            yield page, token
+        for page in self.pages:
+            for token in page.tokens:
+                yield page, token
 
     def set_token_types(self, token_type_labels: TokenTypeLabels):
         if not token_type_labels.pages:
