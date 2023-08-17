@@ -15,19 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          # this might remove tools that are actually needed,
-          # if set to "true" but frees about 6 GB
-          tool-cache: false
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
-
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
