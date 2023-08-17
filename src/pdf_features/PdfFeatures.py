@@ -72,13 +72,18 @@ class PdfFeatures:
         return labels_per_page
 
     @staticmethod
-    def from_poppler_etree(file_path):
+    def from_poppler_etree(file_path: str | Path):
         try:
-            file: str = open(file_path).read()
+            file_content: str = open(file_path).read()
         except FileNotFoundError:
             return None
 
-        file_bytes: bytes = file.encode("utf-8")
+        return PdfFeatures.from_poppler_etree_content(file_path, file_content)
+
+    @staticmethod
+    def from_poppler_etree_content(file_path: str | Path, file_content: str):
+        file_bytes: bytes = file_content.encode("utf-8")
+
         root: ElementBase = etree.fromstring(file_bytes)
 
         fonts: list[PdfFont] = [PdfFont.from_poppler_etree(style_tag) for style_tag in root.findall(".//fontspec")]

@@ -87,7 +87,7 @@ class TokenTypeTrainer:
             page_number,
             "pad_token",
             "",
-            PdfFont("pad_font_id", False, False, 0.0),
+            PdfFont("pad_font_id", False, False, 0.0, "#000000"),
             segment_number,
             segment_number,
             Rectangle(0, 0, 0, 0),
@@ -116,7 +116,7 @@ class TokenTypeTrainer:
         predictions_assigned = 0
         for token_features, page in self.loop_pages():
             for token, prediction in zip(
-                page.tokens, predictions[predictions_assigned: predictions_assigned + len(page.tokens)]
+                page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
             ):
                 token.prediction = int(np.argmax(prediction))
 
