@@ -69,11 +69,3 @@ class Rectangle:
     @staticmethod
     def from_width_height(left: int, top: int, width: int, height: int):
         return Rectangle(left, top, left + width, top + height)
-
-    def scale(self, ratio: float):
-        self.left = int(ratio * self.left)
-        self.top = int(ratio * self.top)
-        self.right = int(ratio * self.right)
-        self.bottom = int(ratio * self.bottom)
-        self.width = int(ratio * self.width)
-        self.height = int(ratio * self.height)
