@@ -30,7 +30,7 @@ class PdfToken:
         self.left_of_token_on_the_right = 0
         self.prediction = 0
 
-    def same_line(self, token: 'PdfToken'):
+    def same_line(self, token: "PdfToken"):
         if self.bounding_box.bottom < token.bounding_box.top:
             return False
 
