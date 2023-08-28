@@ -15,10 +15,7 @@ BENCHMARK_MODEL = join(Path(__file__).parent.parent, "model", "benchmark.model")
 
 def train_for_benchmark():
     Path(BENCHMARK_MODEL).parent.mkdir(exist_ok=True)
-    # train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
-    train_pdf_features = load_labeled_data(
-        pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="multicolumn_test"
-    )
+    train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
     model_configuration = ModelConfiguration()
     trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
     print("training")

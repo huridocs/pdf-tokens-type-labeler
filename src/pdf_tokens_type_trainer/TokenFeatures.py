@@ -39,11 +39,10 @@ class TokenFeatures:
             top, bottom = token.bounding_box.top, token.bounding_box.bottom
             left, right = token.bounding_box.left, token.bounding_box.right
 
-            on_the_bottom = list(filter(lambda x: bottom < x.bounding_box.top, page.tokens))
-            same_line_tokens = filter(
-                lambda x: (top <= x.bounding_box.top < bottom) or (top < x.bounding_box.bottom <= bottom), page.tokens
-            )
-            on_the_right = list(filter(lambda x: right < x.bounding_box.left, same_line_tokens))
+            on_the_bottom = [page_token for page_token in page.tokens if page_token.bounding_box.bottom < top]
+
+            on_the_right = [line_token for line_token in self.get_same_line_tokens(token, page.tokens) if
+                            line_token.bounding_box.right < left]
 
             if len(on_the_bottom):
                 line_spaces.append(min(map(lambda x: int(x.bounding_box.top - bottom), on_the_bottom)))
@@ -71,19 +70,19 @@ class TokenFeatures:
         same_font = True if token_1.font.font_id == token_2.font.font_id else False
 
         return (
-            [
-                same_font,
-                self.font_size_mode / 100,
-                len(token_1.content),
-                len(token_2.content),
-                token_1.content.count(" "),
-                token_2.content.count(" "),
-                sum(character in string.punctuation for character in token_1.content),
-                sum(character in string.punctuation for character in token_2.content),
-            ]
-            + self.get_position_features(token_1, token_2, page_tokens)
-            + self.get_first_letter_last_letter_one_hot_encoding(token_1)
-            + self.get_first_letter_last_letter_one_hot_encoding(token_2)
+                [
+                    same_font,
+                    self.font_size_mode / 100,
+                    len(token_1.content),
+                    len(token_2.content),
+                    token_1.content.count(" "),
+                    token_2.content.count(" "),
+                    sum(character in string.punctuation for character in token_1.content),
+                    sum(character in string.punctuation for character in token_2.content),
+                ]
+                + self.get_position_features(token_1, token_2, page_tokens)
+                + self.get_first_letter_last_letter_one_hot_encoding(token_1)
+                + self.get_first_letter_last_letter_one_hot_encoding(token_2)
         )
 
     def get_position_features(self, token_1: PdfToken, token_2: PdfToken, page_tokens):
@@ -98,14 +97,23 @@ class TokenFeatures:
         width_2 = token_2.bounding_box.width
 
         right_gap_1, left_gap_2 = token_1.left_of_token_on_the_right - right_1, left_2 - token_2.right_of_token_on_the_left
+
+        absolute_right_1 = max(right_1, token_1.right_of_token_on_the_right)
+        absolute_right_2 = max(right_2, token_2.right_of_token_on_the_right)
+
+        absolute_left_1 = min(left_1, token_1.left_of_token_on_the_left)
+        absolute_left_2 = min(left_2, token_2.left_of_token_on_the_left)
+
         right_distance, left_distance, height_difference = left_2 - left_1 - width_1, left_1 - left_2, height_1 - height_2
 
         top_distance = token_2.bounding_box.top - token_1.bounding_box.top - height_1
         top_distance_gaps = self.get_top_distance_gap(token_1, token_2, page_tokens)
 
-        start_lines_differences, end_lines_difference = abs(left_1 - left_2), abs(right_1 - right_2)
+        start_lines_differences = absolute_left_1 - absolute_left_2
+        end_lines_difference = abs(absolute_right_1 - absolute_right_2)
 
         return [
+            absolute_right_1,
             token_1.bounding_box.top,
             right_1,
             width_1,
@@ -126,7 +134,7 @@ class TokenFeatures:
             end_lines_difference,
             start_lines_differences,
             self.lines_space_mode - top_distance_gaps,
-            self.right_space_mode - token_1.bounding_box.right,
+            self.right_space_mode - absolute_right_1,
         ]
 
     @staticmethod
@@ -154,8 +162,7 @@ class TokenFeatures:
         for page, token in self.pdfs_features.loop_tokens():
             left, right = token.bounding_box.left, token.bounding_box.right
 
-            token.left_of_token_on_the_right = left
-            token.right_of_token_on_the_left = right
+            token.left_of_tokens_on_the_left = left
 
             same_line_tokens = self.get_same_line_tokens(token, page.tokens)
 
@@ -163,10 +170,12 @@ class TokenFeatures:
             on_the_right = [each_token for each_token in same_line_tokens if left < each_token.bounding_box.left]
 
             if on_the_left:
-                token.right_of_token_on_the_left = max([x.bounding_box.right for x in on_the_left])
+                token.right_of_tokens_on_the_left = max([x.bounding_box.right for x in on_the_left])
+                token.left_of_tokens_on_the_left = min([x.bounding_box.left for x in on_the_left])
 
             if on_the_right:
-                token.left_of_token_on_the_right = min([x.bounding_box.left for x in on_the_right])
+                token.left_of_tokens_on_the_right = min([x.bounding_box.left for x in on_the_right])
+                token.right_of_tokens_on_the_right = max([x.bounding_box.right for x in on_the_right])
 
     @staticmethod
     def get_same_line_tokens(token, tokens):

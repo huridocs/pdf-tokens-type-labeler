@@ -26,8 +26,13 @@ class PdfToken:
         self.segment_no: int = segment_no
         self.bounding_box: Rectangle = bounding_box
         self.token_type: TokenType = token_type
+
         self.right_of_token_on_the_left = 0
+        self.left_of_token_on_the_left = 0
+
         self.left_of_token_on_the_right = 0
+        self.right_of_token_on_the_right = 0
+
         self.prediction = 0
 
     def same_line(self, token: "PdfToken"):
