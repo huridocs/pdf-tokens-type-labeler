@@ -41,8 +41,8 @@ class TokenFeatures:
 
             on_the_bottom = [page_token for page_token in page.tokens if page_token.bounding_box.bottom < top]
 
-            on_the_right = [line_token for line_token in self.get_same_line_tokens(token, page.tokens) if
-                            line_token.bounding_box.right < left]
+            on_the_right = [line_token for line_token in self.get_same_line_tokens(token, page.tokens)
+                            if right < line_token.bounding_box.left]
 
             if len(on_the_bottom):
                 line_spaces.append(min(map(lambda x: int(x.bounding_box.top - bottom), on_the_bottom)))
