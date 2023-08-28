@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from pdf_features.Rectangle import Rectangle
 from pdf_token_type_labels.ParagraphType import ParagraphType
+from pdf_token_type_labels.TableOfContentType import TableOfContentType
 from pdf_token_type_labels.TokenType import TokenType
 
 
@@ -13,7 +14,7 @@ class TokenTypeLabel(BaseModel):
     left: int
     width: int
     height: int
-    token_type: Union[TokenType, ParagraphType]
+    token_type: Union[TokenType, ParagraphType, TableOfContentType]
 
     def intersection_percentage(self, token_bounding_box: Rectangle):
         label_bounding_box = Rectangle(
