@@ -41,8 +41,11 @@ class TokenFeatures:
 
             on_the_bottom = [page_token for page_token in page.tokens if page_token.bounding_box.bottom < top]
 
-            on_the_right = [line_token for line_token in self.get_same_line_tokens(token, page.tokens)
-                            if right < line_token.bounding_box.left]
+            on_the_right = [
+                line_token
+                for line_token in self.get_same_line_tokens(token, page.tokens)
+                if right < line_token.bounding_box.left
+            ]
 
             if len(on_the_bottom):
                 line_spaces.append(min(map(lambda x: int(x.bounding_box.top - bottom), on_the_bottom)))
@@ -70,19 +73,19 @@ class TokenFeatures:
         same_font = True if token_1.font.font_id == token_2.font.font_id else False
 
         return (
-                [
-                    same_font,
-                    self.font_size_mode / 100,
-                    len(token_1.content),
-                    len(token_2.content),
-                    token_1.content.count(" "),
-                    token_2.content.count(" "),
-                    sum(character in string.punctuation for character in token_1.content),
-                    sum(character in string.punctuation for character in token_2.content),
-                ]
-                + self.get_position_features(token_1, token_2, page_tokens)
-                + self.get_first_letter_last_letter_one_hot_encoding(token_1)
-                + self.get_first_letter_last_letter_one_hot_encoding(token_2)
+            [
+                same_font,
+                self.font_size_mode / 100,
+                len(token_1.content),
+                len(token_2.content),
+                token_1.content.count(" "),
+                token_2.content.count(" "),
+                sum(character in string.punctuation for character in token_1.content),
+                sum(character in string.punctuation for character in token_2.content),
+            ]
+            + self.get_position_features(token_1, token_2, page_tokens)
+            + self.get_first_letter_last_letter_one_hot_encoding(token_1)
+            + self.get_first_letter_last_letter_one_hot_encoding(token_2)
         )
 
     def get_position_features(self, token_1: PdfToken, token_2: PdfToken, page_tokens):

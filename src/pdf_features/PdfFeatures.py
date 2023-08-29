@@ -84,7 +84,8 @@ class PdfFeatures:
     def from_poppler_etree_content(file_path: str | Path, file_content: str):
         file_bytes: bytes = file_content.encode("utf-8")
 
-        root: ElementBase = etree.fromstring(file_bytes)
+        parser = etree.XMLParser(recover=True, encoding="utf-8")
+        root: ElementBase = etree.fromstring(file_bytes, parser=parser)
 
         fonts: list[PdfFont] = [PdfFont.from_poppler_etree(style_tag) for style_tag in root.findall(".//fontspec")]
         fonts_by_font_id: dict[str, PdfFont] = {font.font_id: font for font in fonts}
