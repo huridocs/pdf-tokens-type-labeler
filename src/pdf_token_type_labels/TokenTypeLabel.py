@@ -14,7 +14,7 @@ class TokenTypeLabel(BaseModel):
     left: int
     width: int
     height: int
-    token_type: Union[TokenType, ParagraphType, TableOfContentType]
+    token_type: Union[TokenType, ParagraphType, TableOfContentType, int]
 
     def intersection_percentage(self, token_bounding_box: Rectangle):
         label_bounding_box = Rectangle(
