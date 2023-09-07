@@ -9,15 +9,15 @@ from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 
 class PdfToken:
     def __init__(
-            self,
-            page_number,
-            tag_id: str,
-            content: str,
-            pdf_font: PdfFont,
-            reading_order_no: int,
-            segment_no: int,
-            bounding_box: Rectangle,
-            token_type: TokenType,
+        self,
+        page_number,
+        tag_id: str,
+        content: str,
+        pdf_font: PdfFont,
+        reading_order_no: int,
+        segment_no: int,
+        bounding_box: Rectangle,
+        token_type: TokenType,
     ):
         self.page_number = int(page_number)
         self.id: str = tag_id
@@ -61,7 +61,7 @@ class PdfToken:
 
         return self.bounding_box.get_intersection_percentage(label_bounding_box) > 50
 
-    def get_same_line_tokens(self, page_tokens: list['PdfToken']):
+    def get_same_line_tokens(self, page_tokens: list["PdfToken"]):
         top, height = self.bounding_box.top, self.bounding_box.height
 
         same_line_tokens = [
@@ -72,7 +72,7 @@ class PdfToken:
 
         return same_line_tokens
 
-    def get_context(self, page_tokens: list['PdfToken']):
+    def get_context(self, page_tokens: list["PdfToken"]):
         left, right = self.bounding_box.left, self.bounding_box.right
 
         self.pdf_token_context.left_of_tokens_on_the_left = left

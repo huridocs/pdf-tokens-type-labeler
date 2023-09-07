@@ -29,11 +29,11 @@ from pdf_tokens_type_trainer.get_paths import (
 
 class PdfFeatures:
     def __init__(
-            self,
-            pages: list[PdfPage],
-            fonts: list[PdfFont],
-            file_name="",
-            file_type: str = "",
+        self,
+        pages: list[PdfPage],
+        fonts: list[PdfFont],
+        file_name="",
+        file_type: str = "",
     ):
         self.pages = pages
         self.fonts = fonts
