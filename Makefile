@@ -14,6 +14,3 @@ check_format:
 
 test:
 	. venv/bin/activate; command cd src; python -m unittest test/test_trainer.py
-
-download_models:
-	. venv/bin/activate; command cd src; python download_models.py

@@ -11,6 +11,12 @@
 * FIGURE
 * TITLE
 * TEXT
+* HEADER
+* PAGE_NUMBER
+* IMAGE_CAPTION
+* FOOTER
+* TABLE_OF_CONTENT
+* MARK
 
 ## Quick Start
 Create venv:

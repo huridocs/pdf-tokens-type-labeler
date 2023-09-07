@@ -37,9 +37,13 @@ class TokenTypeTrainer:
             page_features = [self.get_context_features(token_features, page_tokens, i) for i in tokens_indexes]
             features_rows.extend(page_features)
 
-            y = np.append(y, [page_tokens[i].token_type.get_index() for i in tokens_indexes])
+            y = np.append(y, self.get_labels(page_tokens, tokens_indexes))
 
         return self.features_rows_to_x(features_rows), y
+
+    @staticmethod
+    def get_labels(page_tokens: list[PdfToken], tokens_indexes: range):
+        return [page_tokens[i].token_type.get_index() for i in tokens_indexes]
 
     @staticmethod
     def features_rows_to_x(features_rows):
