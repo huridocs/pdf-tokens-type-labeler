@@ -155,7 +155,7 @@ class PdfFeatures:
             top, bottom = token.bounding_box.top, token.bounding_box.bottom
             left, right = token.bounding_box.left, token.bounding_box.right
 
-            on_the_bottom = [page_token for page_token in page.tokens if page_token.bounding_box.bottom < top]
+            on_the_bottom = [page_token for page_token in page.tokens if bottom < page_token.bounding_box.top]
 
             on_the_right = [
                 line_token

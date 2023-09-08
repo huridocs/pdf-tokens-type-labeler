@@ -27,7 +27,7 @@ class PdfToken:
         self.segment_no: int = segment_no
         self.bounding_box: Rectangle = bounding_box
         self.token_type: TokenType = token_type
-        self.pdf_token_context = PdfTokenContext
+        self.pdf_token_context: PdfTokenContext = PdfTokenContext()
         self.prediction = 0
 
     def same_line(self, token: "PdfToken"):
@@ -83,9 +83,9 @@ class PdfToken:
         on_the_right = [each_token for each_token in same_line_tokens if left < each_token.bounding_box.left]
 
         if on_the_left:
-            self.pdf_token_context.right_of_tokens_on_the_left = max([x.bounding_box.right for x in on_the_left])
-            self.pdf_token_context.left_of_tokens_on_the_left = min([x.bounding_box.left for x in on_the_left])
+            self.pdf_token_context.right_of_token_on_the_left = max([x.bounding_box.right for x in on_the_left])
+            self.pdf_token_context.left_of_token_on_the_left = min([x.bounding_box.left for x in on_the_left])
 
         if on_the_right:
-            self.pdf_token_context.left_of_tokens_on_the_right = min([x.bounding_box.left for x in on_the_right])
-            self.pdf_token_context.right_of_tokens_on_the_right = max([x.bounding_box.right for x in on_the_right])
+            self.pdf_token_context.left_of_token_on_the_right = min([x.bounding_box.left for x in on_the_right])
+            self.pdf_token_context.right_of_token_on_the_right = max([x.bounding_box.right for x in on_the_right])
