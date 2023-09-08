@@ -3,7 +3,7 @@ from pdf_features.Rectangle import Rectangle
 from pdf_token_type_labels.TokenType import TokenType
 
 
-class PdfSegment:
+class Token:
     def __init__(self, page_number: int, bounding_box: Rectangle, text_content: str, token_type: TokenType):
         self.page_number = page_number
         self.bounding_box = bounding_box
@@ -12,13 +12,13 @@ class PdfSegment:
 
     @staticmethod
     def from_pdf_token(pdf_token: PdfToken, token_type: TokenType):
-        return PdfSegment(pdf_token.page_number, pdf_token.bounding_box, pdf_token.content, token_type)
+        return Token(pdf_token.page_number, pdf_token.bounding_box, pdf_token.content, token_type)
 
     @staticmethod
     def from_pdf_tokens(pdf_tokens: list[PdfToken]):
         text: str = " ".join([pdf_token.content for pdf_token in pdf_tokens])
         bounding_boxes = [pdf_token.bounding_box for pdf_token in pdf_tokens]
-        return PdfSegment(
+        return Token(
             pdf_tokens[0].page_number, Rectangle.merge_rectangles(bounding_boxes), text, pdf_tokens[0].token_type
         )
 
