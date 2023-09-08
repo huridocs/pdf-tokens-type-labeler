@@ -22,6 +22,7 @@ class ModelConfiguration:
     seed: int = 22
     num_class: int = len(TokenType)
     verbose: int = -1
+    deterministic = True
 
     def dict(self):
         return asdict(self)

@@ -10,12 +10,12 @@ from pdf_tokens_type_trainer.TokenTypeTrainer import TokenTypeTrainer
 from pdf_tokens_type_trainer.config import PDF_LABELED_DATA_ROOT_PATH
 
 BENCHMARK_MODEL = join(Path(__file__).parent.parent, "model", "benchmark.model")
+model_configuration = ModelConfiguration(context_size=5)
 
 
 def train_for_benchmark():
     Path(BENCHMARK_MODEL).parent.mkdir(exist_ok=True)
     train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
-    model_configuration = ModelConfiguration()
     trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
     print("training")
     trainer.train(BENCHMARK_MODEL)
@@ -23,7 +23,7 @@ def train_for_benchmark():
 
 def predict_for_benchmark():
     test_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
-    trainer = TokenTypeTrainer(test_pdf_features, ModelConfiguration())
+    trainer = TokenTypeTrainer(test_pdf_features, model_configuration)
     truths = [token.token_type.get_index() for token in trainer.loop_tokens()]
 
     print("predicting")
@@ -43,7 +43,7 @@ def benchmark():
 
 
 if __name__ == "__main__":
-    start = time()
     print("start")
+    start = time()
     benchmark()
     print("finished in", time() - start, "seconds")
