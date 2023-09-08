@@ -15,7 +15,7 @@ model_configuration = ModelConfiguration(context_size=5)
 
 def train_for_benchmark():
     Path(BENCHMARK_MODEL).parent.mkdir(exist_ok=True)
-    train_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
+    train_pdf_features = load_labeled_data(filter_in="train")
     trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
     labels = [token.token_type.get_index() for token in trainer.loop_tokens()]
     print("training")
@@ -23,7 +23,7 @@ def train_for_benchmark():
 
 
 def predict_for_benchmark():
-    test_pdf_features = load_labeled_data(pdf_labeled_data_project_path=PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
+    test_pdf_features = load_labeled_data(filter_in="test")
     trainer = TokenTypeTrainer(test_pdf_features, model_configuration)
     truths = [token.token_type.get_index() for token in trainer.loop_tokens()]
 

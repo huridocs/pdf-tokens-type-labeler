@@ -3,6 +3,7 @@ from pathlib import Path
 
 PDF_TOKENS_TYPE_ROOT_PATH = Path(__file__).parent.parent.parent.absolute()
 PDF_LABELED_DATA_ROOT_PATH = Path(join(PDF_TOKENS_TYPE_ROOT_PATH.parent.absolute(), "pdf-labeled-data"))
+TOKEN_TYPE_LABEL_PATH = Path(join(PDF_LABELED_DATA_ROOT_PATH, "labeled_data", "token_type"))
 
 TRAINED_MODEL_PATH = join(PDF_TOKENS_TYPE_ROOT_PATH, "model", "pdf_tokens_type.model")
 
