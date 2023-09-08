@@ -23,7 +23,6 @@ from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
 from pdf_tokens_type_trainer.get_paths import (
     get_xml_path,
     get_token_type_labeled_data_path,
-    get_paragraph_extraction_labeled_data_path,
 )
 
 
@@ -55,21 +54,6 @@ class PdfFeatures:
 
         for page, token in self.loop_tokens():
             token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
-
-    def set_paragraphs(self, paragraphs_extractions_labels: TokenTypeLabels):
-        if not paragraphs_extractions_labels.pages:
-            return
-
-        labels_per_page = self.get_labels_per_page(paragraphs_extractions_labels)
-        unassigned_token_index = 1000000
-        for page, token in self.loop_tokens():
-            for index, label in enumerate(labels_per_page[page.page_number]):
-                if token.inside_label(label):
-                    token.segment_no = index + 1
-                    break
-
-            token.segment_no = token.segment_no if token.segment_no else unassigned_token_index
-            unassigned_token_index += 1
 
     def get_labels_per_page(self, paragraphs_extractions_labels):
         page_numbers = [page.page_number for page in self.pages]
@@ -128,13 +112,6 @@ class PdfFeatures:
         token_type_labels_path = join(token_type_labeled_project_path, dataset, pdf_name, LABELS_FILE_NAME)
         token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)
         pdf_features.set_token_types(token_type_labels)
-
-        paragraph_extraction_labeled_project_path = get_paragraph_extraction_labeled_data_path(pdf_labeled_data_project_path)
-        paragraph_extraction_labels_path = join(
-            paragraph_extraction_labeled_project_path, dataset, pdf_name, LABELS_FILE_NAME
-        )
-        paragraphs_extractions_labels = PdfFeatures.load_token_type_labels(paragraph_extraction_labels_path)
-        pdf_features.set_paragraphs(paragraphs_extractions_labels)
 
         return pdf_features
 
