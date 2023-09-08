@@ -21,7 +21,6 @@ class TokenTypeTrainer:
 
     def get_model_input(self):
         features_rows = []
-        y = np.array([])
 
         contex_size = self.model_configuration.context_size
         for token_features, page in self.loop_pages():
@@ -37,9 +36,7 @@ class TokenTypeTrainer:
             page_features = [self.get_context_features(token_features, page_tokens, i) for i in tokens_indexes]
             features_rows.extend(page_features)
 
-            y = np.append(y, self.get_labels(page_tokens, tokens_indexes))
-
-        return self.features_rows_to_x(features_rows), y
+        return self.features_rows_to_x(features_rows)
 
     @staticmethod
     def get_labels(page_tokens: list[PdfToken], tokens_indexes: range):
@@ -55,15 +52,15 @@ class TokenTypeTrainer:
             x[i] = v
         return x
 
-    def train(self, model_path: str | Path):
+    def train(self, model_path: str | Path, labels: list[int]):
         print(f"Getting model input")
-        x_train, y_train = self.get_model_input()
+        x_train = self.get_model_input()
 
         if not x_train.any():
             print("No data for training")
             return
 
-        lgb_train = lgb.Dataset(x_train, y_train)
+        lgb_train = lgb.Dataset(x_train, labels)
         print(f"Training")
 
         gbm = lgb.train(self.model_configuration.dict(), lgb_train)
@@ -93,7 +90,6 @@ class TokenTypeTrainer:
             "",
             PdfFont("pad_font_id", False, False, 0.0, "#000000"),
             segment_number,
-            segment_number,
             Rectangle(0, 0, 0, 0),
             TokenType.TEXT,
         )
@@ -110,7 +106,7 @@ class TokenTypeTrainer:
 
     def predict(self, model_path: str | Path = None):
         model_path = model_path if model_path else pdf_tokens_type_model
-        x, _ = self.get_model_input()
+        x = self.get_model_input()
 
         if not x.any():
             return self.pdfs_features
