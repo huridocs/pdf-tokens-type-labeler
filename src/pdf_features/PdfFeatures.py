@@ -52,14 +52,6 @@ class PdfFeatures:
         for page, token in self.loop_tokens():
             token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
 
-    def get_labels_per_page(self, paragraphs_extractions_labels):
-        page_numbers = [page.page_number for page in self.pages]
-        labels_per_page: dict[int, list[TokenTypeLabel]] = {page_number: list() for page_number in page_numbers}
-        for page_labels in paragraphs_extractions_labels.pages:
-            if page_labels.number in page_numbers:
-                labels_per_page[page_labels.number].extend(page_labels.labels)
-        return labels_per_page
-
     @staticmethod
     def from_poppler_etree(file_path: str | Path):
         try:
