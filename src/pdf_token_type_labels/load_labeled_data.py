@@ -2,7 +2,7 @@ from os import listdir
 from os.path import join, isdir
 
 from pdf_features.PdfFeatures import PdfFeatures
-from pdf_tokens_type_trainer.config import TOKEN_TYPE_LABEL_PATH
+from pdf_tokens_type_trainer.config import TOKEN_TYPE_LABEL_PATH, PDF_LABELED_DATA_ROOT_PATH
 
 
 def loop_datasets(filter_in: str):
@@ -30,7 +30,7 @@ def load_labeled_data(filter_in: str = None) -> list[PdfFeatures]:
 
         dataset_pdf_name = [(dataset_name, pdf_name) for pdf_name in listdir(dataset_path)]
         for dataset, pdf_name in dataset_pdf_name:
-            pdf_features = PdfFeatures.from_labeled_data(dataset, pdf_name)
+            pdf_features = PdfFeatures.from_labeled_data(PDF_LABELED_DATA_ROOT_PATH, dataset, pdf_name)
             pdfs_features.append(pdf_features)
 
     return pdfs_features

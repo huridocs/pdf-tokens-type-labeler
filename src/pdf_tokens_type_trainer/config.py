@@ -6,6 +6,7 @@ PDF_LABELED_DATA_ROOT_PATH = Path(join(PDF_TOKENS_TYPE_ROOT_PATH.parent.absolute
 TOKEN_TYPE_LABEL_PATH = Path(join(PDF_LABELED_DATA_ROOT_PATH, "labeled_data", "token_type"))
 
 TRAINED_MODEL_PATH = join(PDF_TOKENS_TYPE_ROOT_PATH, "model", "pdf_tokens_type.model")
+TOKEN_TYPE_RELATIVE_PATH = join("labeled_data", "token_type")
 
 XML_NAME = "etree.xml"
 LABELS_FILE_NAME = "labels.json"

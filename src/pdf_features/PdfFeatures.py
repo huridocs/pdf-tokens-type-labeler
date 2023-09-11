@@ -18,8 +18,7 @@ from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 from pdf_tokens_type_trainer.config import (
     XML_NAME,
     LABELS_FILE_NAME,
-    TOKEN_TYPE_LABEL_PATH,
-    PDF_LABELED_DATA_ROOT_PATH,
+    TOKEN_TYPE_RELATIVE_PATH,
 )
 from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
 
@@ -102,10 +101,11 @@ class PdfFeatures:
         return pdf_features
 
     @staticmethod
-    def from_labeled_data(dataset: str, pdf_name: str):
-        xml_path = join(PDF_LABELED_DATA_ROOT_PATH, "pdfs", pdf_name, XML_NAME)
+    def from_labeled_data(pdf_labeled_data_root_path: str | Path, dataset: str, pdf_name: str):
+        xml_path = join(pdf_labeled_data_root_path, "pdfs", pdf_name, XML_NAME)
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
-        token_type_labels_path = join(TOKEN_TYPE_LABEL_PATH, dataset, pdf_name, LABELS_FILE_NAME)
+        token_type_label_path: str = join(pdf_labeled_data_root_path, TOKEN_TYPE_RELATIVE_PATH)
+        token_type_labels_path = join(token_type_label_path, dataset, pdf_name, LABELS_FILE_NAME)
         token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)
         pdf_features.set_token_types(token_type_labels)
 
