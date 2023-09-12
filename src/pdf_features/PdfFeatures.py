@@ -14,7 +14,6 @@ from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfModes import PdfModes
 from pdf_features.PdfPage import PdfPage
 from pdf_features.PdfToken import PdfToken
-from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 from pdf_tokens_type_trainer.config import (
     XML_NAME,
     LABELS_FILE_NAME,
