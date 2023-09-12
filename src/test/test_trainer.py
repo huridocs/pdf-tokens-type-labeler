@@ -12,7 +12,7 @@ class TestTrainer(TestCase):
         pdf_features = PdfFeatures.from_pdf_path(join(PDF_TOKENS_TYPE_ROOT_PATH, "src", "test", "blank.pdf"))
         model_path = join(PDF_TOKENS_TYPE_ROOT_PATH, "model", "blank.model")
         trainer = TokenTypeTrainer([pdf_features])
-        trainer.train(model_path)
+        trainer.train(model_path, [])
         self.assertFalse(exists(model_path))
 
     def test_predict_blank_pdf(self):

@@ -18,9 +18,7 @@ class Token:
     def from_pdf_tokens(pdf_tokens: list[PdfToken]):
         text: str = " ".join([pdf_token.content for pdf_token in pdf_tokens])
         bounding_boxes = [pdf_token.bounding_box for pdf_token in pdf_tokens]
-        return Token(
-            pdf_tokens[0].page_number, Rectangle.merge_rectangles(bounding_boxes), text, pdf_tokens[0].token_type
-        )
+        return Token(pdf_tokens[0].page_number, Rectangle.merge_rectangles(bounding_boxes), text, pdf_tokens[0].token_type)
 
     def to_dict(self):
         return {
