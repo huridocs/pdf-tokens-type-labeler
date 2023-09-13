@@ -118,7 +118,7 @@ class TokenTypeTrainer:
             for token, prediction in zip(
                 page.tokens, predictions[predictions_assigned : predictions_assigned + len(page.tokens)]
             ):
-                token.prediction = int(np.argmax(prediction))
+                token.prediction = int(prediction > 0.5) if isinstance(prediction, float) else int(np.argmax(prediction))
 
             predictions_assigned += len(page.tokens)
 
