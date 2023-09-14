@@ -134,7 +134,7 @@ class PdfFeatures:
                 right_spaces.append(int(right))
 
         self.pdf_modes.lines_space_mode = mode(line_spaces)
-        self.pdf_modes.right_space_mode = int(self.pages[0].page_width - mode(right_spaces))
+        self.pdf_modes.right_space_mode = int(self.pages[0].page_width - mode(right_spaces)) if self.pages else 0
 
     def get_mode_font(self):
         fonts_counter: Counter = Counter()
