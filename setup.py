@@ -9,7 +9,7 @@ setup(
     name=PROJECT_NAME,
     packages=["pdf_tokens_type_trainer", "pdf_features", "pdf_token_type_labels"],
     package_dir={"": "src"},
-    version="0.49",
+    version="0.50",
     url="https://github.com/huridocs/pdf-tokens-type-labeler",
     author="HURIDOCS",
     description="This tool returns each token type inside a PDF",

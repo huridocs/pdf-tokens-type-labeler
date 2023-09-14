@@ -26,7 +26,7 @@ class PdfToken:
         self.bounding_box: Rectangle = bounding_box
         self.token_type: TokenType = token_type
         self.pdf_token_context: PdfTokenContext = PdfTokenContext()
-        self.prediction = 0
+        self.prediction: int = 0
 
     def same_line(self, token: "PdfToken"):
         if self.bounding_box.bottom < token.bounding_box.top:
@@ -56,7 +56,7 @@ class PdfToken:
             left=label.left, top=label.top, width=label.width, height=label.height
         )
 
-        return self.bounding_box.get_intersection_percentage(label_bounding_box) > 50
+        return self.bounding_box.get_intersection_percentage(label_bounding_box) > 95
 
     def get_same_line_tokens(self, page_tokens: list["PdfToken"]):
         top, height = self.bounding_box.top, self.bounding_box.height
