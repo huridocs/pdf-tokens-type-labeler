@@ -7,6 +7,7 @@ from sklearn.metrics import f1_score, accuracy_score
 from pdf_token_type_labels.load_labeled_data import load_labeled_data
 from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
 from pdf_tokens_type_trainer.TokenTypeTrainer import TokenTypeTrainer
+from pdf_tokens_type_trainer.config import PDF_LABELED_DATA_ROOT_PATH
 
 BENCHMARK_MODEL = join(Path(__file__).parent.parent, "model", "benchmark.model")
 model_configuration = ModelConfiguration(context_size=5)
@@ -14,7 +15,7 @@ model_configuration = ModelConfiguration(context_size=5)
 
 def train_for_benchmark():
     Path(BENCHMARK_MODEL).parent.mkdir(exist_ok=True)
-    train_pdf_features = load_labeled_data(filter_in="train")
+    train_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in="train")
     trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
     labels = [token.token_type.get_index() for token in trainer.loop_tokens()]
     print("training")
@@ -22,7 +23,7 @@ def train_for_benchmark():
 
 
 def predict_for_benchmark():
-    test_pdf_features = load_labeled_data(filter_in="test")
+    test_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
     print("Prediction PDF number", len(test_pdf_features))
     trainer = TokenTypeTrainer(test_pdf_features, model_configuration)
     truths = [token.token_type.get_index() for token in trainer.loop_tokens()]

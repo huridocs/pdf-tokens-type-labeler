@@ -62,10 +62,16 @@ class PdfFeatures:
 
     @staticmethod
     def from_poppler_etree_content(file_path: str | Path, file_content: str):
+        if not file_content:
+            return PdfFeatures.get_empty()
+
         file_bytes: bytes = file_content.encode("utf-8")
 
         parser = etree.XMLParser(recover=True, encoding="utf-8")
         root: ElementBase = etree.fromstring(file_bytes, parser=parser)
+
+        if not root:
+            return PdfFeatures.get_empty()
 
         fonts: list[PdfFont] = [PdfFont.from_poppler_etree(style_tag) for style_tag in root.findall(".//fontspec")]
         fonts_by_font_id: dict[str, PdfFont] = {font.font_id: font for font in fonts}
@@ -152,3 +158,7 @@ class PdfFeatures:
     def get_tokens_context(self):
         for page, token in self.loop_tokens():
             token.get_context(page.tokens)
+
+    @staticmethod
+    def get_empty():
+        return PdfFeatures([], [])
