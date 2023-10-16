@@ -70,7 +70,7 @@ class PdfFeatures:
         parser = etree.XMLParser(recover=True, encoding="utf-8")
         root: ElementBase = etree.fromstring(file_bytes, parser=parser)
 
-        if not root:
+        if root is None or not len(root):
             return PdfFeatures.get_empty()
 
         fonts: list[PdfFont] = [PdfFont.from_poppler_etree(style_tag) for style_tag in root.findall(".//fontspec")]
