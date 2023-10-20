@@ -52,16 +52,16 @@ class PdfFeatures:
             token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
 
     @staticmethod
-    def from_poppler_etree(file_path: str | Path):
+    def from_poppler_etree(file_path: str | Path, file_name: str | None):
         try:
             file_content: str = open(file_path).read()
         except FileNotFoundError:
             return None
 
-        return PdfFeatures.from_poppler_etree_content(file_path, file_content)
+        return PdfFeatures.from_poppler_etree_content(file_path, file_content, file_name)
 
     @staticmethod
-    def from_poppler_etree_content(file_path: str | Path, file_content: str):
+    def from_poppler_etree_content(file_path: str | Path, file_content: str, file_name: str | None):
         if not file_content:
             return PdfFeatures.get_empty()
 
@@ -78,8 +78,8 @@ class PdfFeatures:
         tree_pages: list[ElementBase] = [tree_page for tree_page in root.findall(".//page")]
         pages: list[PdfPage] = [PdfPage.from_poppler_etree(tree_page, fonts_by_font_id) for tree_page in tree_pages]
 
-        file_type: str = file_path.split("/")[-2]
-        file_name: str = file_path.split("/")[-1]
+        file_type: str = file_path.split("/")[-2] if not file_name else ""
+        file_name: str = file_path.split("/")[-1] if not file_name else file_name
 
         return PdfFeatures(pages, fonts, file_name, file_type)
 
@@ -100,7 +100,7 @@ class PdfFeatures:
     @staticmethod
     def from_labeled_data(pdf_labeled_data_root_path: str | Path, dataset: str, pdf_name: str):
         xml_path = join(pdf_labeled_data_root_path, "pdfs", pdf_name, XML_NAME)
-        pdf_features = PdfFeatures.from_poppler_etree(xml_path)
+        pdf_features = PdfFeatures.from_poppler_etree(xml_path, pdf_name)
         token_type_label_path: str = join(pdf_labeled_data_root_path, TOKEN_TYPE_RELATIVE_PATH)
         token_type_labels_path = join(token_type_label_path, dataset, pdf_name, LABELS_FILE_NAME)
         token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)

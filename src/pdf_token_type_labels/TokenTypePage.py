@@ -9,6 +9,9 @@ class TokenTypePage(BaseModel):
     number: int
     labels: list[TokenTypeLabel]
 
+    def add_label(self, token_type_label: TokenTypeLabel):
+        self.labels.append(token_type_label)
+
     def get_token_type(self, token_bounding_box: Rectangle):
         intersection_percentage = 0
         token_type = TokenType.TEXT
