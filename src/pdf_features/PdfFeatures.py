@@ -52,7 +52,7 @@ class PdfFeatures:
             token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
 
     @staticmethod
-    def from_poppler_etree(file_path: str | Path, file_name: str | None):
+    def from_poppler_etree(file_path: str | Path, file_name: str | None = None):
         try:
             file_content: str = open(file_path).read()
         except FileNotFoundError:
