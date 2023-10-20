@@ -11,6 +11,7 @@ MISTAKES_RELATIVE_PATH = join("labeled_data", "task_mistakes")
 
 XML_NAME = "etree.xml"
 LABELS_FILE_NAME = "labels.json"
+STATUS_FILE_NAME = "status.txt"
 
 if __name__ == "__main__":
     print(PDF_TOKENS_TYPE_ROOT_PATH)

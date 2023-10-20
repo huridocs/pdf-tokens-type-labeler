@@ -7,7 +7,7 @@ from pdf_token_type_labels.TaskMistakesType import TaskMistakesType
 from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
 from pdf_token_type_labels.TokenTypePage import TokenTypePage
-from pdf_tokens_type_trainer.config import LABELS_FILE_NAME, MISTAKES_RELATIVE_PATH
+from pdf_tokens_type_trainer.config import LABELS_FILE_NAME, MISTAKES_RELATIVE_PATH, STATUS_FILE_NAME
 
 
 class TaskMistakes:
@@ -47,6 +47,20 @@ class TaskMistakes:
 
         token_type_labels = TokenTypeLabels(pages=self.token_type_pages)
         token_type_labels_path.write_text(token_type_labels.model_dump_json())
+
+        if self.all_correct():
+            status_path = Path(join(token_type_label_path, self.test_id, self.pdf_name, STATUS_FILE_NAME))
+            status_path.write_text("finished")
+
+    def all_correct(self):
+        for token_type_page in self.token_type_pages:
+            for token_type_label in token_type_page.labels:
+                if token_type_label.token_type == TaskMistakesType.CORRECT:
+                    continue
+
+                return False
+
+        return True
 
 
 if __name__ == "__main__":
