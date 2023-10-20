@@ -61,9 +61,3 @@ class TaskMistakes:
                 return False
 
         return True
-
-
-if __name__ == "__main__":
-    task_mistakes = TaskMistakes("/home/gabo/projects/pdf-labeled-data", "aha", "7640")
-    task_mistakes.add(1, Rectangle(left=1, top=1, right=100, bottom=100), 1, 0)
-    task_mistakes.save()
