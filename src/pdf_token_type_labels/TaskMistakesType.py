@@ -9,3 +9,10 @@ class TaskMistakesType(Enum):
     @staticmethod
     def contains(key: str):
         return key.upper() in [e.value for e in TaskMistakesType]
+
+    @staticmethod
+    def from_text(text: str):
+        try:
+            return TaskMistakesType[text.upper()]
+        except KeyError:
+            return TaskMistakesType.WRONG
