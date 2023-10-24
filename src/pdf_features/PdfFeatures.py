@@ -104,13 +104,13 @@ class PdfFeatures:
         pdf_features = PdfFeatures.from_poppler_etree(xml_path, pdf_name)
         token_type_label_path: str = join(pdf_labeled_data_root_path, TOKEN_TYPE_RELATIVE_PATH)
         token_type_labels_path = join(token_type_label_path, dataset, pdf_name, LABELS_FILE_NAME)
-        token_type_labels = PdfFeatures.load_token_type_labels(token_type_labels_path)
+        token_type_labels = PdfFeatures.load_labels(token_type_labels_path)
         pdf_features.set_token_types(token_type_labels)
 
         return pdf_features
 
     @staticmethod
-    def load_token_type_labels(path: str) -> PdfLabels:
+    def load_labels(path: str) -> PdfLabels:
         if not exists(path):
             print(f"No labeled data for {path}")
             return PdfLabels(pages=[])
