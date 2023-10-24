@@ -26,8 +26,8 @@ class TestTrainer(TestCase):
         trainer = TokenTypeTrainer([pdf_features])
         trainer.set_token_types()
         tokens = pdf_features.pages[0].tokens
-        self.assertEqual(TokenType.TITLE, tokens[0].token_type)
+        self.assertEqual(TokenType.TITLE, tokens[0].label_type)
         self.assertEqual("Document Big Centered Title", tokens[0].content)
-        self.assertEqual(TokenType.TEXT, tokens[1].token_type)
-        self.assertEqual(TokenType.TITLE, tokens[10].token_type)
+        self.assertEqual(TokenType.TEXT, tokens[1].label_type)
+        self.assertEqual(TokenType.TITLE, tokens[10].label_type)
         self.assertEqual("List Title", tokens[10].content)

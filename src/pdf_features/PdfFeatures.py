@@ -14,12 +14,13 @@ from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfModes import PdfModes
 from pdf_features.PdfPage import PdfPage
 from pdf_features.PdfToken import PdfToken
+from pdf_token_type_labels.PdfLabels import PdfLabels
+from pdf_token_type_labels.TokenType import TokenType
 from pdf_tokens_type_trainer.config import (
     XML_NAME,
     LABELS_FILE_NAME,
     TOKEN_TYPE_RELATIVE_PATH,
 )
-from pdf_token_type_labels.TokenTypeLabels import TokenTypeLabels
 
 
 class PdfFeatures:
@@ -44,12 +45,12 @@ class PdfFeatures:
             for token in page.tokens:
                 yield page, token
 
-    def set_token_types(self, token_type_labels: TokenTypeLabels):
-        if not token_type_labels.pages:
+    def set_token_types(self, labels: PdfLabels):
+        if not labels.pages:
             return
 
         for page, token in self.loop_tokens():
-            token.token_type = token_type_labels.get_token_type(token.page_number, token.bounding_box)
+            token.token_type = TokenType.from_index(labels.get_label_type(token.page_number, token.bounding_box))
 
     @staticmethod
     def from_poppler_etree(file_path: str | Path, file_name: str | None = None):
@@ -61,7 +62,7 @@ class PdfFeatures:
         return PdfFeatures.from_poppler_etree_content(file_path, file_content, file_name)
 
     @staticmethod
-    def from_poppler_etree_content(file_path: str | Path, file_content: str, file_name: str | None):
+    def from_poppler_etree_content(file_path: str | Path, file_content: str, file_name: str | None = None):
         if not file_content:
             return PdfFeatures.get_empty()
 
@@ -109,14 +110,14 @@ class PdfFeatures:
         return pdf_features
 
     @staticmethod
-    def load_token_type_labels(path: str) -> TokenTypeLabels:
+    def load_token_type_labels(path: str) -> PdfLabels:
         if not exists(path):
             print(f"No labeled data for {path}")
-            return TokenTypeLabels(pages=[])
+            return PdfLabels(pages=[])
 
         labels_text = Path(path).read_text()
         labels_dict = json.loads(labels_text)
-        return TokenTypeLabels(**labels_dict)
+        return PdfLabels(**labels_dict)
 
     def get_modes(self):
         line_spaces, right_spaces = [0], [0]

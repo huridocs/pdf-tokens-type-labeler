@@ -16,3 +16,6 @@ class TaskMistakesType(Enum):
             return TaskMistakesType[text.upper()]
         except KeyError:
             return TaskMistakesType.WRONG
+
+    def get_index(self) -> int:
+        return list(TaskMistakesType).index(self)

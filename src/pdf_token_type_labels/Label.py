@@ -1,22 +1,16 @@
-from typing import Union
-
-from lxml.etree import ElementBase
 from pydantic import BaseModel
+from lxml.etree import ElementBase
 
 from pdf_features.Rectangle import Rectangle
-from pdf_token_type_labels.ParagraphType import ParagraphType
-from pdf_token_type_labels.ReadingOrderType import ReadingOrderType
-from pdf_token_type_labels.TableOfContentType import TableOfContentType
-from pdf_token_type_labels.TaskMistakesType import TaskMistakesType
-from pdf_token_type_labels.TokenType import TokenType
 
 
-class TokenTypeLabel(BaseModel):
+class Label(BaseModel):
     top: int
     left: int
     width: int
     height: int
-    token_type: Union[TokenType, ParagraphType, TableOfContentType, ReadingOrderType, TaskMistakesType, int]
+    label_type: int
+    text: str = ""
 
     def intersection_percentage(self, token_bounding_box: Rectangle):
         label_bounding_box = Rectangle(
@@ -33,19 +27,9 @@ class TokenTypeLabel(BaseModel):
         return self.width * self.height
 
     @staticmethod
-    def from_rectangle(rectangle: Rectangle, token_type: TaskMistakesType):
-        return TokenTypeLabel(
-            top=rectangle.top, left=rectangle.left, width=rectangle.width, height=rectangle.height, token_type=token_type
-        )
-
-    @staticmethod
-    def from_text_element(text_element: ElementBase):
-        return TokenTypeLabel(
-            top=text_element.attrib["top"],
-            left=text_element.attrib["left"],
-            width=text_element.attrib["width"],
-            height=text_element.attrib["height"],
-            token_type=TokenType.from_text(text_element.attrib["tag_type"]),
+    def from_rectangle(rectangle: Rectangle, token_type: int):
+        return Label(
+            top=rectangle.top, left=rectangle.left, width=rectangle.width, height=rectangle.height, label_type=token_type
         )
 
     @staticmethod
@@ -55,6 +39,4 @@ class TokenTypeLabel(BaseModel):
         bottom = max([int(x.attrib["top"]) + int(x.attrib["height"]) for x in text_elements])
         right = max([int(x.attrib["left"]) + int(x.attrib["width"]) for x in text_elements])
 
-        return TokenTypeLabel(
-            top=top, left=left, width=int(right - left), height=int(bottom - top), token_type=ParagraphType.PARAGRAPH
-        )
+        return Label(top=top, left=left, width=int(right - left), height=int(bottom - top), label_type=0)

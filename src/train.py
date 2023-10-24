@@ -8,7 +8,7 @@ def train():
     model_configuration = ModelConfiguration()
     train_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH)
     trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
-    labels = [token.token_type.get_index() for token in trainer.loop_tokens()]
+    labels = [token.label_type.get_index() for token in trainer.loop_tokens()]
     print("training")
     trainer.train(TRAINED_MODEL_PATH, labels)
 

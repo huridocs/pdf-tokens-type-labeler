@@ -3,8 +3,8 @@ from lxml.etree import ElementBase
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfTokenContext import PdfTokenContext
 from pdf_features.Rectangle import Rectangle
+from pdf_token_type_labels.Label import Label
 from pdf_token_type_labels.TokenType import TokenType
-from pdf_token_type_labels.TokenTypeLabel import TokenTypeLabel
 
 
 class PdfToken:
@@ -51,7 +51,7 @@ class PdfToken:
 
         return PdfToken(page_number, tag_id, content, pdf_font, reading_order_no, bounding_box, token_type)
 
-    def inside_label(self, label: TokenTypeLabel):
+    def inside_label(self, label: Label):
         label_bounding_box = Rectangle.from_width_height(
             left=label.left, top=label.top, width=label.width, height=label.height
         )
