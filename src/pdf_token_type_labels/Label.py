@@ -10,7 +10,7 @@ class Label(BaseModel):
     width: int
     height: int
     label_type: int
-    text: str = ""
+    metadata: str = ""
 
     def intersection_percentage(self, token_bounding_box: Rectangle):
         label_bounding_box = Rectangle(
