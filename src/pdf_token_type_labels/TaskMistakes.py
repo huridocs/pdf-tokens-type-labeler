@@ -55,7 +55,7 @@ class TaskMistakes:
     def all_correct(self):
         for token_type_page in self.page_labels:
             for token_type_label in token_type_page.labels:
-                if token_type_label.label_type == TaskMistakesType.CORRECT:
+                if token_type_label.label_type == TaskMistakesType.CORRECT.get_index():
                     continue
 
                 return False
