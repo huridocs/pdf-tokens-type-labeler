@@ -56,7 +56,7 @@ class PdfFeatures:
     def from_poppler_etree(file_path: str | Path, file_name: str | None = None):
         try:
             file_content: str = open(file_path).read()
-        except FileNotFoundError:
+        except (FileNotFoundError, UnicodeDecodeError):
             return None
 
         return PdfFeatures.from_poppler_etree_content(file_path, file_content, file_name)
