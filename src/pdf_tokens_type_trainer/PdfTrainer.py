@@ -1,3 +1,4 @@
+from os.path import exists
 from pathlib import Path
 
 import lightgbm as lgb
@@ -41,8 +42,8 @@ class PdfTrainer:
         lgb_train = lgb.Dataset(x_train, labels)
         print(f"Training")
 
-        if self.model_configuration.resume_training:
-            model = lgb.Booster(model_file=self.model_configuration.resume_model_path)
+        if self.model_configuration.resume_training and exists(model_path):
+            model = lgb.Booster(model_file=model_path)
             gbm = lgb.train(self.model_configuration.dict(), lgb_train, init_model=model)
         else:
             gbm = lgb.train(self.model_configuration.dict(), lgb_train)
