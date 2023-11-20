@@ -41,7 +41,12 @@ class PdfTrainer:
         lgb_train = lgb.Dataset(x_train, labels)
         print(f"Training")
 
-        gbm = lgb.train(self.model_configuration.dict(), lgb_train)
+        if self.model_configuration.resume_training:
+            model = lgb.Booster(model_file=self.model_configuration.resume_model_path)
+            gbm = lgb.train(self.model_configuration.dict(), lgb_train, init_model=model)
+        else:
+            gbm = lgb.train(self.model_configuration.dict(), lgb_train)
+
         print(f"Saving")
         gbm.save_model(model_path, num_iteration=gbm.best_iteration)
 

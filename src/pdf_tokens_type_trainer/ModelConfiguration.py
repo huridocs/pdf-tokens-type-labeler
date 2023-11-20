@@ -23,6 +23,8 @@ class ModelConfiguration:
     num_class: int = len(TokenType)
     verbose: int = -1
     deterministic: bool = True
+    resume_training: bool = False
+    resume_model_path: str = ""
 
     def dict(self):
         return asdict(self)
