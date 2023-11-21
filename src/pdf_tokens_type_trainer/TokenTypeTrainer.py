@@ -63,4 +63,4 @@ class TokenTypeTrainer(PdfTrainer):
     def set_token_types(self):
         self.predict()
         for token in self.loop_tokens():
-            token.label_type = TokenType.from_index(token.prediction)
+            token.token_type = TokenType.from_index(token.prediction)
