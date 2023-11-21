@@ -1,10 +1,9 @@
 from os.path import join
 from pathlib import Path
 from time import time
-
-
 from sklearn.metrics import f1_score, accuracy_score
-
+from BenchmarkTable import BenchmarkTable
+from pdf_features.PdfFeatures import PdfFeatures
 from pdf_token_type_labels.load_labeled_data import load_labeled_data
 from pdf_tokens_type_trainer.ModelConfiguration import ModelConfiguration
 from pdf_tokens_type_trainer.TokenTypeTrainer import TokenTypeTrainer
@@ -22,10 +21,9 @@ def train_for_benchmark():
     trainer.train(BENCHMARK_MODEL, labels)
 
 
-def predict_for_benchmark():
-    test_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
-    print("Prediction PDF number", len(test_pdf_features))
-    trainer = TokenTypeTrainer(test_pdf_features, model_configuration)
+def predict_for_benchmark(pdfs_features: list[PdfFeatures]):
+    print("Prediction PDF number", len(pdfs_features))
+    trainer = TokenTypeTrainer(pdfs_features, model_configuration)
     truths = [token.token_type.get_index() for token in trainer.loop_tokens()]
 
     print("predicting")
@@ -34,9 +32,15 @@ def predict_for_benchmark():
     return truths, predictions
 
 
-def benchmark():
+def benchmark(get_granular_scores: bool):
     train_for_benchmark()
-    truths, predictions = predict_for_benchmark()
+    test_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
+    start_time = time()
+    truths, predictions = predict_for_benchmark(test_pdf_features)
+    total_time = time() - start_time
+    if get_granular_scores:
+        benchmark_table = BenchmarkTable(test_pdf_features, total_time)
+        benchmark_table.prepare_benchmark_table()
 
     f1 = round(f1_score(truths, predictions, average="macro") * 100, 2)
     accuracy = round(accuracy_score(truths, predictions) * 100, 2)
@@ -47,5 +51,5 @@ def benchmark():
 if __name__ == "__main__":
     print("start")
     start = time()
-    benchmark()
+    benchmark(True)
     print("finished in", time() - start, "seconds")
