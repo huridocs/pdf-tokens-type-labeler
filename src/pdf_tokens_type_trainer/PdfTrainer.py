@@ -44,7 +44,7 @@ class PdfTrainer:
 
         if self.model_configuration.resume_training and exists(model_path):
             model = lgb.Booster(model_file=model_path)
-            gbm = lgb.train(self.model_configuration.dict(), lgb_train, init_model=model)
+            gbm = model.refit(x_train, labels)
         else:
             gbm = lgb.train(self.model_configuration.dict(), lgb_train)
 
