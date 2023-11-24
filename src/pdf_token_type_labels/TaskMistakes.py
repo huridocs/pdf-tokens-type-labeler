@@ -17,7 +17,7 @@ class TaskMistakes:
         self.pdf_name = pdf_name
         self.page_labels: list[PageLabels] = list()
 
-    def add(self, page_number: int, rectangle: Rectangle, truth: int, prediction: int | float, metadata: str):
+    def add(self, page_number: int, rectangle: Rectangle, truth: int, prediction: int | float, metadata: str = ""):
         token_type_label = Label.from_rectangle(rectangle, self.get_token_type(prediction, truth))
         token_type_label.metadata = metadata
         token_type_page = [x for x in self.page_labels if x.number == page_number]
