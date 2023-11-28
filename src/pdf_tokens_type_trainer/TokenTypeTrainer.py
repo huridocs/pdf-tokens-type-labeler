@@ -60,7 +60,7 @@ class TokenTypeTrainer(PdfTrainer):
 
             predictions_assigned += len(page.tokens)
 
-    def set_token_types(self):
-        self.predict()
+    def set_token_types(self, model_path: str | Path = None):
+        self.predict(model_path)
         for token in self.loop_tokens():
             token.token_type = TokenType.from_index(token.prediction)
