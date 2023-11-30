@@ -1,4 +1,5 @@
-from os.path import exists
+import os
+from os.path import exists, join
 from pathlib import Path
 
 import lightgbm as lgb
@@ -77,3 +78,11 @@ class PdfTrainer:
 
         lightgbm_model = lgb.Booster(model_file=model_path)
         return lightgbm_model.predict(x)
+
+    def save_training_data(self, save_folder_path: str | Path, labels: list[int]):
+        os.makedirs(save_folder_path, exist_ok=True)
+
+        x = self.get_model_input()
+
+        np.save(join(str(save_folder_path), "x.npy"), x)
+        np.save(join(str(save_folder_path), "y.npy"), labels)
