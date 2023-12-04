@@ -79,7 +79,9 @@ class PdfFeatures:
         fonts: list[PdfFont] = [PdfFont.from_poppler_etree(style_tag) for style_tag in root.findall(".//fontspec")]
         fonts_by_font_id: dict[str, PdfFont] = {font.font_id: font for font in fonts}
         tree_pages: list[ElementBase] = [tree_page for tree_page in root.findall(".//page")]
-        pages: list[PdfPage] = [PdfPage.from_poppler_etree(tree_page, fonts_by_font_id) for tree_page in tree_pages]
+        pages: list[PdfPage] = [
+            PdfPage.from_poppler_etree(tree_page, fonts_by_font_id, file_name) for tree_page in tree_pages
+        ]
 
         file_type: str = file_path.split("/")[-2] if not dataset else dataset
         file_name: str = file_path.split("/")[-1] if not file_name else file_name
