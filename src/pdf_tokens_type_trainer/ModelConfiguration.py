@@ -24,6 +24,7 @@ class ModelConfiguration:
     verbose: int = -1
     deterministic: bool = True
     resume_training: bool = False
+    early_stopping_rounds: int = 10
 
     def dict(self):
         return asdict(self)
