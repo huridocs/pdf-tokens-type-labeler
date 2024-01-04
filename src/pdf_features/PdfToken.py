@@ -51,12 +51,12 @@ class PdfToken:
 
         return PdfToken(page_number, tag_id, content, pdf_font, reading_order_no, bounding_box, token_type)
 
-    def inside_label(self, label: Label):
+    def get_label_intersection_percentage(self, label: Label):
         label_bounding_box = Rectangle.from_width_height(
             left=label.left, top=label.top, width=label.width, height=label.height
         )
 
-        return self.bounding_box.get_intersection_percentage(label_bounding_box) > 95
+        return self.bounding_box.get_intersection_percentage(label_bounding_box)
 
     def get_same_line_tokens(self, page_tokens: list["PdfToken"]):
         top, height = self.bounding_box.top, self.bounding_box.height
