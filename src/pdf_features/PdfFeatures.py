@@ -91,9 +91,9 @@ class PdfFeatures:
     @staticmethod
     def contains_text(xml_path: str):
         file_content = open(xml_path).read()
-        file_bytes = file_content.encode('utf-8')
+        file_bytes = file_content.encode("utf-8")
         root: ElementBase = etree.fromstring(file_bytes)
-        text_elements: list[ElementBase] = root.findall('.//text')
+        text_elements: list[ElementBase] = root.findall(".//text")
         return len(text_elements) > 0
 
     @staticmethod
