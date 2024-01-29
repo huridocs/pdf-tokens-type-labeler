@@ -89,11 +89,21 @@ class PdfFeatures:
         return PdfFeatures(pages, fonts, file_name, file_type)
 
     @staticmethod
+    def contains_text(xml_path: str):
+        file_content = open(xml_path).read()
+        file_bytes = file_content.encode('utf-8')
+        root: ElementBase = etree.fromstring(file_bytes)
+        text_elements: list[ElementBase] = root.findall('.//text')
+        return len(text_elements) > 0
+
+    @staticmethod
     def from_pdf_path(pdf_path, xml_path: str = None):
         remove_xml = False if xml_path else True
         xml_path = xml_path if xml_path else join(tempfile.gettempdir(), "pdf_etree.xml")
 
         subprocess.run(["pdftohtml", "-i", "-xml", "-zoom", "1.0", pdf_path, xml_path])
+        if not PdfFeatures.contains_text(xml_path):
+            subprocess.run(["pdftohtml", "-i", "-hidden", "-xml", "-zoom", "1.0", pdf_path, xml_path])
 
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
 
