@@ -39,7 +39,7 @@ class BenchmarkTable:
         benchmark_table_rows = self.get_benchmark_table_rows()
         mistake_count, label_count = len(self.mistakes), len(self.prediction_info_list)
         average_accuracy = 100 - (100 * mistake_count / len(self.prediction_info_list))
-        with open("benchmark_table.txt", "w") as benchmark_file:
+        with open("../results/benchmark_table.txt", "w") as benchmark_file:
             table_rows = [table_row.get_row_values() for table_row in benchmark_table_rows]
             benchmark_table = (
                 tabulate(tabular_data=table_rows, headers=table_headers)

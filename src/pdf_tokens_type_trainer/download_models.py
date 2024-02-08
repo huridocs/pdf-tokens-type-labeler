@@ -11,9 +11,3 @@ token_type_finding_config_path = hf_hub_download(
     filename="tag_type_finding_model_config.txt",
     revision="7d98776dd34acb2fe3a06495c82e64b9c84bdc16",
 )
-
-letter_corpus_path = hf_hub_download(
-    repo_id="HURIDOCS/pdf-segmentation",
-    filename="letter_corpus.txt",
-    revision="da00a69c8d6a84493712e819580c0148757f466c",
-)

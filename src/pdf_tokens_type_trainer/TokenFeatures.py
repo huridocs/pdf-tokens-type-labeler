@@ -1,42 +1,32 @@
-import ast
 import string
-
-from numpy import unique
+import unicodedata
 
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.PdfToken import PdfToken
-from pdf_tokens_type_trainer.download_models import letter_corpus_path
+from pdf_tokens_type_trainer.config import CHARACTER_TYPE
 
 
 class TokenFeatures:
     def __init__(self, pdfs_features: PdfFeatures):
         self.pdfs_features = pdfs_features
-        self.letter_corpus: dict[str, int] = self.get_letter_corpus()
-        self.len_letter_corpus = len(unique(list(self.letter_corpus.values())))
-
-    @staticmethod
-    def get_letter_corpus():
-        with open(letter_corpus_path, "r") as corpus_file:
-            corpus_contents = corpus_file.read()
-            return ast.literal_eval(corpus_contents)
 
     def get_features(self, token_1: PdfToken, token_2: PdfToken, page_tokens: list[PdfToken]):
         same_font = True if token_1.font.font_id == token_2.font.font_id else False
 
         return (
-            [
-                same_font,
-                self.pdfs_features.pdf_modes.font_size_mode / 100,
-                len(token_1.content),
-                len(token_2.content),
-                token_1.content.count(" "),
-                token_2.content.count(" "),
-                sum(character in string.punctuation for character in token_1.content),
-                sum(character in string.punctuation for character in token_2.content),
-            ]
-            + self.get_position_features(token_1, token_2, page_tokens)
-            + self.get_first_letter_last_letter_one_hot_encoding(token_1)
-            + self.get_first_letter_last_letter_one_hot_encoding(token_2)
+                [
+                    same_font,
+                    self.pdfs_features.pdf_modes.font_size_mode / 100,
+                    len(token_1.content),
+                    len(token_2.content),
+                    token_1.content.count(" "),
+                    token_2.content.count(" "),
+                    sum(character in string.punctuation for character in token_1.content),
+                    sum(character in string.punctuation for character in token_2.content),
+                ]
+                + self.get_position_features(token_1, token_2, page_tokens)
+                + self.get_unicode_categories(token_1)
+                + self.get_unicode_categories(token_2)
         )
 
     def get_position_features(self, token_1: PdfToken, token_2: PdfToken, page_tokens):
@@ -115,14 +105,22 @@ class TokenFeatures:
         top_distance_gaps = top_distance - (gap_middle_bottom - gap_middle_top)
         return top_distance_gaps
 
-    def get_first_letter_last_letter_one_hot_encoding(self, token: PdfToken):
-        token_first_letter = [-1 if token.id == "pad_token" else 0] * self.len_letter_corpus
-        token_last_letter = [-1 if token.id == "pad_token" else 0] * self.len_letter_corpus
+    @staticmethod
+    def get_unicode_categories(token: PdfToken):
+        if token.id == "pad_token":
+            return [-1] * len(CHARACTER_TYPE) * 4
 
-        if token.content and token.content[0] in self.letter_corpus.keys():
-            token_first_letter[self.letter_corpus[token.content[0]]] = 1
+        categories = [unicodedata.category(letter) for letter in token.content[:2] + token.content[-2:]]
+        categories += ['no_category'] * (4 - len(categories))
 
-        if token.content and token.content[-1] in self.letter_corpus.keys():
-            token_last_letter[self.letter_corpus[token.content[-1]]] = 1
+        categories_one_hot_encoding = list()
 
-        return token_first_letter + token_last_letter
+        for category in categories:
+            categories_one_hot_encoding.extend([0] * len(CHARACTER_TYPE))
+            if category not in CHARACTER_TYPE:
+                continue
+
+            category_index = len(categories_one_hot_encoding) - len(CHARACTER_TYPE) + CHARACTER_TYPE.index(category)
+            categories_one_hot_encoding[category_index] = 1
+
+        return categories_one_hot_encoding

@@ -1,4 +1,3 @@
-import random
 from os.path import join
 from pathlib import Path
 from time import time

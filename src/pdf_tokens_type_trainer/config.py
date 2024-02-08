@@ -13,6 +13,10 @@ XML_NAME = "etree.xml"
 LABELS_FILE_NAME = "labels.json"
 STATUS_FILE_NAME = "status.txt"
 
+CHARACTER_TYPE = ['Lt', 'Lo', 'Sk', 'Lm', 'Sm', 'Cf', 'Nl', 'Pe', 'Po',
+                  'Pd', 'Me', 'Sc', 'Ll', 'Pf', 'Mc', 'Lu', 'Zs', 'Cn',
+                  'Cc', 'No', 'Co', 'Ps', 'Nd', 'Mn', 'Pi', 'So', 'Pc']
+
 if __name__ == "__main__":
     print(PDF_TOKENS_TYPE_ROOT_PATH)
     print(PDF_LABELED_DATA_ROOT_PATH)
