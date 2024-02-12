@@ -3,7 +3,7 @@ from huggingface_hub import hf_hub_download
 pdf_tokens_type_model = hf_hub_download(
     repo_id="HURIDOCS/pdf-segmentation",
     filename="pdf_tokens_type.model",
-    revision="87895b77811d11d89efa71861ca7a35e1c34bf47",
+    revision="c71f833500707201db9f3649a6d2010d3ce9d4c9",
 )
 
 token_type_finding_config_path = hf_hub_download(

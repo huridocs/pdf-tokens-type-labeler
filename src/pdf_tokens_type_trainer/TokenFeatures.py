@@ -14,19 +14,19 @@ class TokenFeatures:
         same_font = True if token_1.font.font_id == token_2.font.font_id else False
 
         return (
-                [
-                    same_font,
-                    self.pdfs_features.pdf_modes.font_size_mode / 100,
-                    len(token_1.content),
-                    len(token_2.content),
-                    token_1.content.count(" "),
-                    token_2.content.count(" "),
-                    sum(character in string.punctuation for character in token_1.content),
-                    sum(character in string.punctuation for character in token_2.content),
-                ]
-                + self.get_position_features(token_1, token_2, page_tokens)
-                + self.get_unicode_categories(token_1)
-                + self.get_unicode_categories(token_2)
+            [
+                same_font,
+                self.pdfs_features.pdf_modes.font_size_mode / 100,
+                len(token_1.content),
+                len(token_2.content),
+                token_1.content.count(" "),
+                token_2.content.count(" "),
+                sum(character in string.punctuation for character in token_1.content),
+                sum(character in string.punctuation for character in token_2.content),
+            ]
+            + self.get_position_features(token_1, token_2, page_tokens)
+            + self.get_unicode_categories(token_1)
+            + self.get_unicode_categories(token_2)
         )
 
     def get_position_features(self, token_1: PdfToken, token_2: PdfToken, page_tokens):
@@ -111,7 +111,7 @@ class TokenFeatures:
             return [-1] * len(CHARACTER_TYPE) * 4
 
         categories = [unicodedata.category(letter) for letter in token.content[:2] + token.content[-2:]]
-        categories += ['no_category'] * (4 - len(categories))
+        categories += ["no_category"] * (4 - len(categories))
 
         categories_one_hot_encoding = list()
 

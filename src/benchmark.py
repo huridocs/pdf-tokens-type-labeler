@@ -77,6 +77,6 @@ def benchmark_all_data_model():
 if __name__ == "__main__":
     print("start")
     start = time()
-    benchmark_all_data_model()
-    # train()
+    # benchmark_all_data_model()
+    train()
     print("finished in", time() - start, "seconds")
