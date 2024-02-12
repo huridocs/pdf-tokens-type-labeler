@@ -21,26 +21,52 @@ def train_for_benchmark():
     trainer.train(BENCHMARK_MODEL, labels)
 
 
-def predict_for_benchmark(pdfs_features: list[PdfFeatures]):
+def train():
+    model_path = Path(join(Path(__file__).parent.parent, "model", "all_data.model"))
+    train_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH)
+    trainer = TokenTypeTrainer(train_pdf_features, model_configuration)
+    labels = [token.token_type.get_index() for token in trainer.loop_tokens()]
+    trainer.train(model_path, labels)
+
+
+def predict_for_benchmark(pdfs_features: list[PdfFeatures], model_path: str = ""):
     print("Prediction PDF number", len(pdfs_features))
     trainer = TokenTypeTrainer(pdfs_features, model_configuration)
     truths = [token.token_type.get_index() for token in trainer.loop_tokens()]
 
     print("predicting")
-    trainer.predict(BENCHMARK_MODEL)
+    if not model_path:
+        trainer.predict(BENCHMARK_MODEL)
+    else:
+        trainer.predict(model_path)
     predictions = [token.prediction for token in trainer.loop_tokens()]
     return truths, predictions
 
 
-def benchmark(get_granular_scores: bool):
+def benchmark():
     train_for_benchmark()
     test_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
     start_time = time()
     truths, predictions = predict_for_benchmark(test_pdf_features)
     total_time = time() - start_time
-    if get_granular_scores:
-        benchmark_table = BenchmarkTable(test_pdf_features, total_time)
-        benchmark_table.prepare_benchmark_table()
+    benchmark_table = BenchmarkTable(test_pdf_features, total_time)
+    benchmark_table.prepare_benchmark_table()
+
+    f1 = round(f1_score(truths, predictions, average="macro") * 100, 2)
+    accuracy = round(accuracy_score(truths, predictions) * 100, 2)
+    print(f"F1 score {f1}%")
+    print(f"Accuracy score {accuracy}%")
+
+
+def benchmark_all_data_model():
+    test_pdf_features = load_labeled_data(PDF_LABELED_DATA_ROOT_PATH, filter_in="test")
+    start_time = time()
+    model_path = join(Path(__file__).parent.parent, "model", "all_data.model")
+    truths, predictions = predict_for_benchmark(test_pdf_features, model_path)
+    total_time = time() - start_time
+
+    benchmark_table = BenchmarkTable(test_pdf_features, total_time)
+    benchmark_table.prepare_benchmark_table()
 
     f1 = round(f1_score(truths, predictions, average="macro") * 100, 2)
     accuracy = round(accuracy_score(truths, predictions) * 100, 2)
@@ -51,5 +77,6 @@ def benchmark(get_granular_scores: bool):
 if __name__ == "__main__":
     print("start")
     start = time()
-    benchmark(True)
+    benchmark_all_data_model()
+    # train()
     print("finished in", time() - start, "seconds")
