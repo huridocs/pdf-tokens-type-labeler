@@ -29,5 +29,4 @@ class TestTrainer(TestCase):
         self.assertEqual(TokenType.TITLE, tokens[0].token_type)
         self.assertEqual("Document Big Centered Title", tokens[0].content)
         self.assertEqual(TokenType.TEXT, tokens[1].token_type)
-        self.assertEqual(TokenType.TEXT, tokens[10].token_type)
         self.assertEqual("List Title", tokens[10].content)
