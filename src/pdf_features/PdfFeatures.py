@@ -84,7 +84,7 @@ class PdfFeatures:
         ]
 
         file_type: str = file_path.split("/")[-2] if not dataset else dataset
-        file_name: str = file_path.split("/")[-1] if not file_name else file_name
+        file_name: str = Path(file_path).name if not file_name else file_name
 
         return PdfFeatures(pages, fonts, file_name, file_type)
 
@@ -109,7 +109,7 @@ class PdfFeatures:
         if not PdfFeatures.contains_text(xml_path):
             subprocess.run(["pdftohtml", "-i", "-hidden", "-xml", "-zoom", "1.0", pdf_path, xml_path])
 
-        pdf_features = PdfFeatures.from_poppler_etree(xml_path)
+        pdf_features = PdfFeatures.from_poppler_etree(xml_path, file_name=Path(pdf_path).name)
 
         if remove_xml and exists(xml_path):
             os.remove(xml_path)
