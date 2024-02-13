@@ -8,7 +8,7 @@ from pathlib import Path
 from statistics import mode
 
 from lxml import etree
-from lxml.etree import ElementBase
+from lxml.etree import ElementBase, XMLSyntaxError
 
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfModes import PdfModes
@@ -56,7 +56,7 @@ class PdfFeatures:
     def from_poppler_etree(file_path: str | Path, file_name: str | None = None, dataset: str | None = None):
         try:
             file_content: str = open(file_path).read()
-        except (FileNotFoundError, UnicodeDecodeError):
+        except (FileNotFoundError, UnicodeDecodeError, XMLSyntaxError):
             return None
 
         return PdfFeatures.from_poppler_etree_content(file_path, file_content, file_name, dataset)
@@ -93,10 +93,10 @@ class PdfFeatures:
         try:
             file_content = open(xml_path).read()
             file_bytes = file_content.encode("utf-8")
-        except UnicodeDecodeError:
+            root: ElementBase = etree.fromstring(file_bytes)
+            text_elements: list[ElementBase] = root.findall(".//text")
+        except (FileNotFoundError, UnicodeDecodeError, XMLSyntaxError):
             return False
-        root: ElementBase = etree.fromstring(file_bytes)
-        text_elements: list[ElementBase] = root.findall(".//text")
         return len(text_elements) > 0
 
     @staticmethod
@@ -106,7 +106,7 @@ class PdfFeatures:
 
         subprocess.run(["pdftohtml", "-i", "-xml", "-zoom", "1.0", pdf_path, xml_path])
 
-        if exists(xml_path) and not PdfFeatures.contains_text(xml_path):
+        if not PdfFeatures.contains_text(xml_path):
             subprocess.run(["pdftohtml", "-i", "-hidden", "-xml", "-zoom", "1.0", pdf_path, xml_path])
 
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
