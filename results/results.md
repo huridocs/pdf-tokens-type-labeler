@@ -1,4 +1,4 @@
-Letter corpus
+### Letter corpus
 
 F1 score 74.29%
 Accuracy score 96.63%
@@ -13,7 +13,7 @@ multi_column_test  5/88 (94.32%)  13/19 (31.58%)    0/0 (100.0%)      6/180 (96.
 Average Accuracy: 397/11763 (96.63%)
 Total Time: 3.68
 
-Unicode 2 first characters + 2 last characters
+### Unicode 2 first characters + 2 last characters
 
 F1 score 77.46%
 Accuracy score 97.22%
@@ -27,7 +27,7 @@ multi_column_test  3/88 (96.59%)  15/19 (21.05%)    0/0 (100.0%)      6/180 (96.
 Average Accuracy: 334/11763 (97.16%)
 Total Time: 4.84
 
-Unicode 2 first characters
+### Unicode 2 first characters
 
 F1 score 76.57%
 Accuracy score 97.07%
@@ -42,7 +42,7 @@ Average Accuracy: 345/11763 (97.07%)
 Total Time: 4.16
 
 
-Unicode 3 first characters
+### Unicode 3 first characters
 
 F1 score 69.96%
 Accuracy score 97.0%
@@ -58,7 +58,7 @@ Average Accuracy: 353/11763 (97.0%)
 Total Time: 4.49
 
 
-Unicode 3 first characters + 3 last characters
+### Unicode 3 first characters + 3 last characters
 
 F1 score 75.9%
 Accuracy score 97.08%
@@ -72,7 +72,7 @@ multi_column_test  2/88 (97.73%)  13/19 (31.58%)    0/0 (100.0%)      6/180 (96.
 Average Accuracy: 344/11763 (97.08%)
 Total Time: 5.33
 
-Unicode 3 first characters + 1 last characters
+### Unicode 3 first characters + 1 last characters
 
 F1 score 75.92%
 Accuracy score 96.96%
@@ -86,7 +86,7 @@ multi_column_test  1/88 (98.86%)  13/19 (31.58%)    0/0 (100.0%)     7/180 (96.1
 Average Accuracy: 358/11763 (96.96%)
 Total Time: 4.73
 
-Unicode 2 first characters + 1 last characters
+### Unicode 2 first characters + 1 last characters
 
 F1 score 69.82%
 Accuracy score 96.95%

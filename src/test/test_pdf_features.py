@@ -5,6 +5,13 @@ from pdf_features.PdfFeatures import PdfFeatures
 
 
 class TestPdfFeatures(TestCase):
+
+    def test_wrong_pdf(self):
+        not_a_pdf_path = join(Path(__file__).parent, "not_a_pdf.pdf")
+        print(not_a_pdf_path)
+        pdf_features = PdfFeatures.from_pdf_path(not_a_pdf_path)
+        self.assertIsNone(pdf_features)
+
     def test_blank_xml(self):
         pdf_features_empty = PdfFeatures.from_poppler_etree_content("", "")
         pdf_features_empty_list = PdfFeatures.from_poppler_etree_content("", "[]")

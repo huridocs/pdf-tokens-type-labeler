@@ -102,7 +102,8 @@ class PdfFeatures:
         xml_path = xml_path if xml_path else join(tempfile.gettempdir(), "pdf_etree.xml")
 
         subprocess.run(["pdftohtml", "-i", "-xml", "-zoom", "1.0", pdf_path, xml_path])
-        if not PdfFeatures.contains_text(xml_path):
+
+        if exists(xml_path) and not PdfFeatures.contains_text(xml_path):
             subprocess.run(["pdftohtml", "-i", "-hidden", "-xml", "-zoom", "1.0", pdf_path, xml_path])
 
         pdf_features = PdfFeatures.from_poppler_etree(xml_path)
