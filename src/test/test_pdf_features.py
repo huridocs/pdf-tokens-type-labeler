@@ -5,7 +5,6 @@ from pdf_features.PdfFeatures import PdfFeatures
 
 
 class TestPdfFeatures(TestCase):
-
     def test_wrong_pdf(self):
         not_a_pdf_path = join(Path(__file__).parent, "not_a_pdf.pdf")
         print(not_a_pdf_path)

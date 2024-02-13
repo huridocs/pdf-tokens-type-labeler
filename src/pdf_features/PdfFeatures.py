@@ -90,8 +90,11 @@ class PdfFeatures:
 
     @staticmethod
     def contains_text(xml_path: str):
-        file_content = open(xml_path).read()
-        file_bytes = file_content.encode("utf-8")
+        try:
+            file_content = open(xml_path).read()
+            file_bytes = file_content.encode("utf-8")
+        except UnicodeDecodeError:
+            return False
         root: ElementBase = etree.fromstring(file_bytes)
         text_elements: list[ElementBase] = root.findall(".//text")
         return len(text_elements) > 0
