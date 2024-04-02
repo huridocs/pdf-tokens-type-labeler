@@ -1,3 +1,5 @@
+import sys
+
 from pdf_features.PdfFeatures import PdfFeatures
 from Token import Token
 from pdf_token_type_labels.TokenType import TokenType
@@ -17,3 +19,7 @@ def predict(pdf_path: str, model_path: str = None):
         predictions.append(Token.from_pdf_token(token, token_type))
 
     print([prediction.to_dict() for prediction in predictions])
+
+
+if __name__ == '__main__':
+    predict(sys.argv[1], sys.argv[2] if len(sys.argv) >= 3 else None)

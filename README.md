@@ -51,5 +51,5 @@ Train a new model:
 
 ## Use a custom model
     
-    python src/predict.py /path/to/pdf --model-path /path/to/model
+    python src/predict.py /path/to/pdf /path/to/model
     
