@@ -1,5 +1,3 @@
-import typer
-
 from pdf_features.PdfFeatures import PdfFeatures
 from Token import Token
 from pdf_token_type_labels.TokenType import TokenType
@@ -19,7 +17,3 @@ def predict(pdf_path: str, model_path: str = None):
         predictions.append(Token.from_pdf_token(token, token_type))
 
     print([prediction.to_dict() for prediction in predictions])
-
-
-if __name__ == "__main__":
-    typer.run(predict)
