@@ -2,19 +2,17 @@ from enum import Enum
 
 
 class TokenType(Enum):
-    FORMULA = "FORMULA"
-    FOOTNOTE = "FOOTNOTE"
-    LIST = "LIST"
-    TABLE = "TABLE"
-    FIGURE = "FIGURE"
-    TITLE = "TITLE"
-    TEXT = "TEXT"
-    HEADER = "HEADER"
-    PAGE_NUMBER = "PAGE_NUMBER"
-    IMAGE_CAPTION = "IMAGE_CAPTION"
-    FOOTER = "FOOTER"
-    TABLE_OF_CONTENT = "TABLE_OF_CONTENT"
-    MARK = "MARK"
+    FORMULA = "Formula"
+    FOOTNOTE = "Footnote"
+    LIST_ITEM = "ListItem"
+    TABLE = "Table"
+    PICTURE = "Picture"
+    TITLE = "Title"
+    TEXT = "Text"
+    PAGE_HEADER = "PageHeader"
+    SECTION_HEADER = "SectionHeader"
+    CAPTION = "Caption"
+    PAGE_FOOTER = "PageFooter"
 
     @staticmethod
     def from_text(text: str):
