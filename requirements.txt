@@ -1,7 +1,7 @@
 numpy==1.26.4
 lxml==5.2.0
 lightgbm==4.3.0
-huggingface_hub==0.22.2
+huggingface_hub==0.23.2
 tqdm==4.66.2
 scikit-learn==1.4.1.post1
 pydantic==2.6.4
