@@ -21,5 +21,5 @@ def predict(pdf_path: str, model_path: str = None):
     print([prediction.to_dict() for prediction in predictions])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     predict(sys.argv[1], sys.argv[2] if len(sys.argv) >= 3 else None)
