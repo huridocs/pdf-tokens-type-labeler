@@ -13,4 +13,4 @@ check_format:
 	. .venv/bin/activate; command black --line-length 125 . --check
 
 test:
-	. .venv/bin/activate; command cd src; python -m unittest test/test_trainer.py
+	. .venv/bin/activate; command cd src; python -m pytest

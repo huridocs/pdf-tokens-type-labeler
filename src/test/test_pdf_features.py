@@ -14,8 +14,8 @@ class TestPdfFeatures(TestCase):
     def test_blank_xml(self):
         pdf_features_empty = PdfFeatures.from_poppler_etree_content("", "")
         pdf_features_empty_list = PdfFeatures.from_poppler_etree_content("", "[]")
-        self.assertNotEquals(pdf_features_empty, None)
-        self.assertNotEquals(pdf_features_empty_list, None)
+        self.assertNotEqual(pdf_features_empty, None)
+        self.assertNotEqual(pdf_features_empty_list, None)
 
     def test_ocr_pdf(self):
         current_directory = Path(__file__).parent.resolve()
